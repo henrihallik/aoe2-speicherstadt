@@ -1,16 +1,17 @@
 # Static Validation Report
 
-Candidate: Speicherstadt v0.1.0
+Candidate: Speicherstadt v0.2.0
 Checked: 2026-08-05
-RMS SHA-256: `c74f93c3b4b7fb12612b71e6f9e9067b2de3acdff851fb01f1818b8fa493417f`
+RMS SHA-256: `baf4c096191534e5794dc079d9442c8ec2d6800fc16aaf7f6895eeba915f8a78`
 
 ## Map-Specific Validator
 
 `node tools/validate-rms.mjs` passes. It checks the section and control
 structure, exact transposed geometry, six crossing rectangles, non-overlapping
-land-origin squares, flat elevation, explicit 9-villager start,
-object/resource totals, actor-area references, land confinement, neutral
-ownership, mandatory placement, and the competition's prohibited mechanics.
+land-origin squares, `border_fuzziness 100` on every constrained land, flat
+elevation, explicit 9-villager start, object/resource totals, actor-area
+references, land confinement, neutral ownership, mandatory placement, and the
+competition's prohibited mechanics.
 
 ## Current RMS Grammar
 
@@ -42,6 +43,9 @@ or random-block nesting error.
 
 ## Runtime Status
 
-Pending. Static tools cannot execute AoE2 DE's proprietary map generator,
-verify object placement, test pathfinding, or prove runtime stability. The
-required seed matrix and match checks are in `runtime-test-checklist.md`.
+Version 0.1.0 loaded and ran, but its first smoke test failed the intended
+topology: `border_fuzziness 0` causes AoE2 land growth to ignore borders, so
+shallow crossing terrain spread through the canals and disrupted resource
+placement. Version 0.2.0 changes every constrained land to the fully respected
+value of `100` and adds a static regression check. Its in-game retest, full
+seed matrix, and match checks remain pending in `runtime-test-checklist.md`.

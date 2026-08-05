@@ -209,17 +209,22 @@ for (const block of landsByTerrain("PLAYER_GROUND")) {
   assert.match(block.body, /\bzone\s+1\b/, "player mainland must remain in zone 1");
 }
 
-for (const block of [
-  ...landsByTerrain("CENTRAL_GROUND"),
-  ...landsByTerrain("ROAD_GROUND"),
-  ...landsByTerrain("BRIDGE_GROUND"),
-]) {
-  assert.match(block.body, /\bborder_fuzziness\s+0\b/, "fixed topology cannot be fuzzy");
-  assert.match(block.body, /\bclumping_factor\s+100\b/, "fixed topology needs full clumping");
-  assert.match(
-    block.body,
-    /\bother_zone_avoidance_distance\s+0\b/,
-    "fixed lands must meet without avoidance gaps",
+for (const block of landBlocks) {
+  const landId = valueFor("land_id", block.body);
+  assert.equal(
+    valueFor("border_fuzziness", block.body),
+    "100",
+    `${landId} must fully respect its borders (AoE2 treats 0 as ignoring them)`,
+  );
+  assert.equal(
+    valueFor("clumping_factor", block.body),
+    "100",
+    `${landId} needs full clumping`,
+  );
+  assert.equal(
+    valueFor("other_zone_avoidance_distance", block.body),
+    "0",
+    `${landId} must meet adjacent lands without avoidance gaps`,
   );
 }
 

@@ -3,9 +3,11 @@
 `Speicherstadt` is a 1v1 hybrid Random Map submission candidate for **The
 Garrison 2026 map competition**. It is designed by betwixtX with OpenAI Codex.
 
-**Current status:** release candidate pending runtime generation tests and
-authentic AoE2 DE screenshots. Static validation and independent grammar
-parsing pass, but neither can execute the proprietary map generator.
+**Current status:** v0.2.0 topology correction pending an in-game retest and
+authentic AoE2 DE screenshots. The v0.1.0 smoke test exposed incorrect land
+border semantics: `border_fuzziness 0` made every constrained land ignore its
+borders. Version 0.2.0 uses the engine's fully constrained value of `100` and
+adds a validator regression check for every land block.
 
 ## Concept
 

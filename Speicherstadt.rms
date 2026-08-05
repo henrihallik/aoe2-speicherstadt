@@ -1,6 +1,6 @@
 /* Compatibility: Definitive Edition */
 /*
-    Speicherstadt v0.1.0
+    Speicherstadt v0.2.0
     The Garrison 2026 map competition release candidate.
 
     Designed for:
@@ -98,6 +98,8 @@ effect_amount MOD_RESOURCE AMOUNT_STARTING_FOOD ATTR_ADD -100
 base_terrain HARBOR_WATER
 enable_waves 0
 
+/* In AoE2, 100 fully respects land borders; 0 would ignore them. */
+
 if VERTICAL_CANALS
 
     /* Western mainland. */
@@ -110,7 +112,7 @@ if VERTICAL_CANALS
         right_border 65
         top_border 0
         bottom_border 0
-        border_fuzziness 0
+        border_fuzziness 100
         clumping_factor 100
         other_zone_avoidance_distance 0
         zone 1
@@ -132,7 +134,7 @@ if VERTICAL_CANALS
         right_border 0
         top_border 0
         bottom_border 0
-        border_fuzziness 0
+        border_fuzziness 100
         clumping_factor 100
         other_zone_avoidance_distance 0
         zone 1
@@ -154,7 +156,7 @@ if VERTICAL_CANALS
         right_border 43
         top_border 8
         bottom_border 8
-        border_fuzziness 0
+        border_fuzziness 100
         clumping_factor 100
         other_zone_avoidance_distance 0
         zone 2
@@ -171,7 +173,7 @@ if VERTICAL_CANALS
         right_border 42
         top_border 22
         bottom_border 74
-        border_fuzziness 0
+        border_fuzziness 100
         clumping_factor 100
         other_zone_avoidance_distance 0
         zone 2
@@ -187,7 +189,7 @@ if VERTICAL_CANALS
         right_border 42
         top_border 48
         bottom_border 48
-        border_fuzziness 0
+        border_fuzziness 100
         clumping_factor 100
         other_zone_avoidance_distance 0
         zone 2
@@ -203,7 +205,7 @@ if VERTICAL_CANALS
         right_border 42
         top_border 74
         bottom_border 22
-        border_fuzziness 0
+        border_fuzziness 100
         clumping_factor 100
         other_zone_avoidance_distance 0
         zone 2
@@ -220,7 +222,7 @@ if VERTICAL_CANALS
         right_border 55
         top_border 22
         bottom_border 74
-        border_fuzziness 0
+        border_fuzziness 100
         clumping_factor 100
         other_zone_avoidance_distance 0
         zone 3
@@ -236,7 +238,7 @@ if VERTICAL_CANALS
         right_border 55
         top_border 48
         bottom_border 48
-        border_fuzziness 0
+        border_fuzziness 100
         clumping_factor 100
         other_zone_avoidance_distance 0
         zone 3
@@ -252,7 +254,7 @@ if VERTICAL_CANALS
         right_border 55
         top_border 74
         bottom_border 22
-        border_fuzziness 0
+        border_fuzziness 100
         clumping_factor 100
         other_zone_avoidance_distance 0
         zone 3
@@ -269,7 +271,7 @@ if VERTICAL_CANALS
         right_border 33
         top_border 22
         bottom_border 74
-        border_fuzziness 0
+        border_fuzziness 100
         clumping_factor 100
         other_zone_avoidance_distance 0
         zone 3
@@ -285,7 +287,7 @@ if VERTICAL_CANALS
         right_border 33
         top_border 48
         bottom_border 48
-        border_fuzziness 0
+        border_fuzziness 100
         clumping_factor 100
         other_zone_avoidance_distance 0
         zone 3
@@ -301,7 +303,7 @@ if VERTICAL_CANALS
         right_border 33
         top_border 74
         bottom_border 22
-        border_fuzziness 0
+        border_fuzziness 100
         clumping_factor 100
         other_zone_avoidance_distance 0
         zone 3
@@ -320,7 +322,7 @@ else
         right_border 0
         top_border 0
         bottom_border 65
-        border_fuzziness 0
+        border_fuzziness 100
         clumping_factor 100
         other_zone_avoidance_distance 0
         zone 1
@@ -342,7 +344,7 @@ else
         right_border 0
         top_border 65
         bottom_border 0
-        border_fuzziness 0
+        border_fuzziness 100
         clumping_factor 100
         other_zone_avoidance_distance 0
         zone 1
@@ -364,7 +366,7 @@ else
         right_border 8
         top_border 43
         bottom_border 43
-        border_fuzziness 0
+        border_fuzziness 100
         clumping_factor 100
         other_zone_avoidance_distance 0
         zone 2
@@ -381,7 +383,7 @@ else
         right_border 74
         top_border 42
         bottom_border 42
-        border_fuzziness 0
+        border_fuzziness 100
         clumping_factor 100
         other_zone_avoidance_distance 0
         zone 2
@@ -397,7 +399,7 @@ else
         right_border 48
         top_border 42
         bottom_border 42
-        border_fuzziness 0
+        border_fuzziness 100
         clumping_factor 100
         other_zone_avoidance_distance 0
         zone 2
@@ -413,7 +415,7 @@ else
         right_border 22
         top_border 42
         bottom_border 42
-        border_fuzziness 0
+        border_fuzziness 100
         clumping_factor 100
         other_zone_avoidance_distance 0
         zone 2
@@ -430,7 +432,7 @@ else
         right_border 74
         top_border 33
         bottom_border 55
-        border_fuzziness 0
+        border_fuzziness 100
         clumping_factor 100
         other_zone_avoidance_distance 0
         zone 3
@@ -446,7 +448,7 @@ else
         right_border 48
         top_border 33
         bottom_border 55
-        border_fuzziness 0
+        border_fuzziness 100
         clumping_factor 100
         other_zone_avoidance_distance 0
         zone 3
@@ -462,7 +464,7 @@ else
         right_border 22
         top_border 33
         bottom_border 55
-        border_fuzziness 0
+        border_fuzziness 100
         clumping_factor 100
         other_zone_avoidance_distance 0
         zone 3
@@ -479,7 +481,7 @@ else
         right_border 74
         top_border 55
         bottom_border 33
-        border_fuzziness 0
+        border_fuzziness 100
         clumping_factor 100
         other_zone_avoidance_distance 0
         zone 3
@@ -495,7 +497,7 @@ else
         right_border 48
         top_border 55
         bottom_border 33
-        border_fuzziness 0
+        border_fuzziness 100
         clumping_factor 100
         other_zone_avoidance_distance 0
         zone 3
@@ -511,7 +513,7 @@ else
         right_border 22
         top_border 55
         bottom_border 33
-        border_fuzziness 0
+        border_fuzziness 100
         clumping_factor 100
         other_zone_avoidance_distance 0
         zone 3

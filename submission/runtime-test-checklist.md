@@ -4,6 +4,10 @@ Static parsers cannot prove that AoE2 DE will generate, place, and path every
 object correctly. Complete this checklist in the same current game build that
 will be used for the submission.
 
+Test v0.2.0 or newer. Version 0.1.0 loaded successfully but failed topology:
+its lands ignored their intended rectangles and shallow terrain spread through
+the canals.
+
 ## Required Lobby
 
 - Game mode: Random Map
@@ -46,6 +50,8 @@ color assignments.
 - The island has 12 gold, 8 stone, 5 relics, four wood clusters, and two church
   ruins.
 - No resource is trapped in water, inside a building, or beyond the map edge.
+- The minimap matches the two-mainland, two-canal, central-island layout.
+- Land units cannot enter canal water except at the six shallow crossings.
 - All six shallow crossings connect cleanly to both banks.
 - A land unit can cross through all three complete lanes.
 - A ship can traverse both canals and rotate around both ends of the island.
