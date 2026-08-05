@@ -1,0 +1,999 @@
+/* Compatibility: Definitive Edition */
+/*
+    Speicherstadt v0.1.0
+    The Garrison 2026 map competition release candidate.
+
+    Designed for:
+      - 1v1 Random Map
+      - Tiny map (the normal two-player size)
+      - Standard resources
+      - 9-villager quick start
+
+    Layout:
+      - Two mirrored player districts face a long central warehouse island.
+      - Two navigable canals wrap around the island and join at both ends.
+      - Three shallow crossings span each canal, creating six bridge fronts.
+      - The island lets armies switch lanes and holds contested gold, stone,
+        relics, wood, and two ruined church landmarks.
+      - Each player has equal home fish and identical starting resources.
+
+    Competitive integrity:
+      - No unit or building attributes are changed.
+      - No triggers, XS, custom includes, capturable buildings, or income
+        mechanics are used.
+      - The only player effects are the established quick-start adjustments
+        of -30 starting wood and -100 starting food.
+*/
+
+/* Terrain aliases. */
+#const PLAYER_GROUND 12
+#const PLAYER_DETAIL 6
+#const CENTRAL_GROUND 11
+#const CENTRAL_DETAIL 25
+#const HARBOR_WATER 23
+#const HARBOR_DEEP 22
+#const BRIDGE_GROUND 4
+#const ROAD_GROUND 24
+
+/* Object aliases. */
+#const START_HERDABLE 594
+#const START_LUREABLE 48
+#const START_HUNTABLE 65
+#const START_TREE 349
+#const HARBOR_FISH 457
+#const CHURCH_RUIN 1517
+
+/* Stable land identifiers. */
+#const NEAR_MAINLAND_ID 101
+#const FAR_MAINLAND_ID 102
+#const CENTRAL_ISLAND_ID 200
+#const UPPER_ROAD_ID 210
+#const MIDDLE_ROAD_ID 211
+#const LOWER_ROAD_ID 212
+#const NEAR_UPPER_BRIDGE_ID 301
+#const NEAR_MIDDLE_BRIDGE_ID 302
+#const NEAR_LOWER_BRIDGE_ID 303
+#const FAR_UPPER_BRIDGE_ID 304
+#const FAR_MIDDLE_BRIDGE_ID 305
+#const FAR_LOWER_BRIDGE_ID 306
+
+/* Actor areas used only for fair placement separation. */
+#const TC_AREA 1000
+#const VILLAGER_ANCHOR_AREA 1010
+#const BERRIES_AREA 1100
+#const PRIMARY_GOLD_AREA 1110
+#const FORWARD_GOLD_AREA 1120
+#const TERTIARY_GOLD_AREA 1130
+#const PRIMARY_STONE_AREA 1140
+#const FORWARD_STONE_AREA 1150
+#const SAFE_WOOD_AREA 1200
+#const FORWARD_WOOD_AREA 1210
+
+/* Rotate the complete topology between games. */
+start_random
+    percent_chance 50 #define VERTICAL_CANALS
+    percent_chance 50 #define HORIZONTAL_CANALS
+end_random
+
+/* Neither player color is tied to a side of the map. */
+start_random
+    percent_chance 50 #define PLAYER_ONE_NEAR_ORIGIN
+    percent_chance 50 #define PLAYER_TWO_NEAR_ORIGIN
+end_random
+
+
+<PLAYER_SETUP>
+
+direct_placement
+behavior_version 2
+ai_info_map_type RIVERS 0 0 0
+
+/* Standard Garrison-style 9-villager quick-start resources. */
+effect_amount MOD_RESOURCE AMOUNT_STARTING_WOOD ATTR_ADD -30
+effect_amount MOD_RESOURCE AMOUNT_STARTING_FOOD ATTR_ADD -100
+
+
+<LAND_GENERATION>
+
+base_terrain HARBOR_WATER
+enable_waves 0
+
+if VERTICAL_CANALS
+
+    /* Western mainland. */
+    create_land {
+        terrain_type PLAYER_GROUND
+        land_percent 100
+        base_size 16
+        land_position 18 50
+        left_border 0
+        right_border 65
+        top_border 0
+        bottom_border 0
+        border_fuzziness 0
+        clumping_factor 100
+        other_zone_avoidance_distance 0
+        zone 1
+        land_id NEAR_MAINLAND_ID
+        if PLAYER_ONE_NEAR_ORIGIN
+            assign_to_player 1
+        else
+            assign_to_player 2
+        endif
+    }
+
+    /* Eastern mainland. */
+    create_land {
+        terrain_type PLAYER_GROUND
+        land_percent 100
+        base_size 16
+        land_position 82 50
+        left_border 65
+        right_border 0
+        top_border 0
+        bottom_border 0
+        border_fuzziness 0
+        clumping_factor 100
+        other_zone_avoidance_distance 0
+        zone 1
+        land_id FAR_MAINLAND_ID
+        if PLAYER_ONE_NEAR_ORIGIN
+            assign_to_player 2
+        else
+            assign_to_player 1
+        endif
+    }
+
+    /* Long warehouse island; open water at both ends joins the canals. */
+    create_land {
+        terrain_type CENTRAL_GROUND
+        land_percent 100
+        base_size 2
+        land_position 50 50
+        left_border 43
+        right_border 43
+        top_border 8
+        bottom_border 8
+        border_fuzziness 0
+        clumping_factor 100
+        other_zone_avoidance_distance 0
+        zone 2
+        land_id CENTRAL_ISLAND_ID
+    }
+
+    /* Three road lanes across the warehouse island. */
+    create_land {
+        terrain_type ROAD_GROUND
+        land_percent 100
+        base_size 2
+        land_position 50 24
+        left_border 42
+        right_border 42
+        top_border 22
+        bottom_border 74
+        border_fuzziness 0
+        clumping_factor 100
+        other_zone_avoidance_distance 0
+        zone 2
+        land_id UPPER_ROAD_ID
+    }
+
+    create_land {
+        terrain_type ROAD_GROUND
+        land_percent 100
+        base_size 2
+        land_position 55 50
+        left_border 42
+        right_border 42
+        top_border 48
+        bottom_border 48
+        border_fuzziness 0
+        clumping_factor 100
+        other_zone_avoidance_distance 0
+        zone 2
+        land_id MIDDLE_ROAD_ID
+    }
+
+    create_land {
+        terrain_type ROAD_GROUND
+        land_percent 100
+        base_size 2
+        land_position 50 76
+        left_border 42
+        right_border 42
+        top_border 74
+        bottom_border 22
+        border_fuzziness 0
+        clumping_factor 100
+        other_zone_avoidance_distance 0
+        zone 2
+        land_id LOWER_ROAD_ID
+    }
+
+    /* Western canal crossings. Each overlaps both banks to prevent gaps. */
+    create_land {
+        terrain_type BRIDGE_GROUND
+        land_percent 100
+        base_size 2
+        land_position 39 24
+        left_border 33
+        right_border 55
+        top_border 22
+        bottom_border 74
+        border_fuzziness 0
+        clumping_factor 100
+        other_zone_avoidance_distance 0
+        zone 3
+        land_id NEAR_UPPER_BRIDGE_ID
+    }
+
+    create_land {
+        terrain_type BRIDGE_GROUND
+        land_percent 100
+        base_size 2
+        land_position 39 50
+        left_border 33
+        right_border 55
+        top_border 48
+        bottom_border 48
+        border_fuzziness 0
+        clumping_factor 100
+        other_zone_avoidance_distance 0
+        zone 3
+        land_id NEAR_MIDDLE_BRIDGE_ID
+    }
+
+    create_land {
+        terrain_type BRIDGE_GROUND
+        land_percent 100
+        base_size 2
+        land_position 39 76
+        left_border 33
+        right_border 55
+        top_border 74
+        bottom_border 22
+        border_fuzziness 0
+        clumping_factor 100
+        other_zone_avoidance_distance 0
+        zone 3
+        land_id NEAR_LOWER_BRIDGE_ID
+    }
+
+    /* Eastern canal crossings. */
+    create_land {
+        terrain_type BRIDGE_GROUND
+        land_percent 100
+        base_size 2
+        land_position 61 24
+        left_border 55
+        right_border 33
+        top_border 22
+        bottom_border 74
+        border_fuzziness 0
+        clumping_factor 100
+        other_zone_avoidance_distance 0
+        zone 3
+        land_id FAR_UPPER_BRIDGE_ID
+    }
+
+    create_land {
+        terrain_type BRIDGE_GROUND
+        land_percent 100
+        base_size 2
+        land_position 61 50
+        left_border 55
+        right_border 33
+        top_border 48
+        bottom_border 48
+        border_fuzziness 0
+        clumping_factor 100
+        other_zone_avoidance_distance 0
+        zone 3
+        land_id FAR_MIDDLE_BRIDGE_ID
+    }
+
+    create_land {
+        terrain_type BRIDGE_GROUND
+        land_percent 100
+        base_size 2
+        land_position 61 76
+        left_border 55
+        right_border 33
+        top_border 74
+        bottom_border 22
+        border_fuzziness 0
+        clumping_factor 100
+        other_zone_avoidance_distance 0
+        zone 3
+        land_id FAR_LOWER_BRIDGE_ID
+    }
+
+else
+
+    /* Northern mainland. */
+    create_land {
+        terrain_type PLAYER_GROUND
+        land_percent 100
+        base_size 16
+        land_position 50 18
+        left_border 0
+        right_border 0
+        top_border 0
+        bottom_border 65
+        border_fuzziness 0
+        clumping_factor 100
+        other_zone_avoidance_distance 0
+        zone 1
+        land_id NEAR_MAINLAND_ID
+        if PLAYER_ONE_NEAR_ORIGIN
+            assign_to_player 1
+        else
+            assign_to_player 2
+        endif
+    }
+
+    /* Southern mainland. */
+    create_land {
+        terrain_type PLAYER_GROUND
+        land_percent 100
+        base_size 16
+        land_position 50 82
+        left_border 0
+        right_border 0
+        top_border 65
+        bottom_border 0
+        border_fuzziness 0
+        clumping_factor 100
+        other_zone_avoidance_distance 0
+        zone 1
+        land_id FAR_MAINLAND_ID
+        if PLAYER_ONE_NEAR_ORIGIN
+            assign_to_player 2
+        else
+            assign_to_player 1
+        endif
+    }
+
+    /* Rotated warehouse island; water joins around its western/eastern ends. */
+    create_land {
+        terrain_type CENTRAL_GROUND
+        land_percent 100
+        base_size 2
+        land_position 50 50
+        left_border 8
+        right_border 8
+        top_border 43
+        bottom_border 43
+        border_fuzziness 0
+        clumping_factor 100
+        other_zone_avoidance_distance 0
+        zone 2
+        land_id CENTRAL_ISLAND_ID
+    }
+
+    /* Three rotated road lanes. */
+    create_land {
+        terrain_type ROAD_GROUND
+        land_percent 100
+        base_size 2
+        land_position 24 50
+        left_border 22
+        right_border 74
+        top_border 42
+        bottom_border 42
+        border_fuzziness 0
+        clumping_factor 100
+        other_zone_avoidance_distance 0
+        zone 2
+        land_id UPPER_ROAD_ID
+    }
+
+    create_land {
+        terrain_type ROAD_GROUND
+        land_percent 100
+        base_size 2
+        land_position 50 55
+        left_border 48
+        right_border 48
+        top_border 42
+        bottom_border 42
+        border_fuzziness 0
+        clumping_factor 100
+        other_zone_avoidance_distance 0
+        zone 2
+        land_id MIDDLE_ROAD_ID
+    }
+
+    create_land {
+        terrain_type ROAD_GROUND
+        land_percent 100
+        base_size 2
+        land_position 76 50
+        left_border 74
+        right_border 22
+        top_border 42
+        bottom_border 42
+        border_fuzziness 0
+        clumping_factor 100
+        other_zone_avoidance_distance 0
+        zone 2
+        land_id LOWER_ROAD_ID
+    }
+
+    /* Northern canal crossings. */
+    create_land {
+        terrain_type BRIDGE_GROUND
+        land_percent 100
+        base_size 2
+        land_position 24 39
+        left_border 22
+        right_border 74
+        top_border 33
+        bottom_border 55
+        border_fuzziness 0
+        clumping_factor 100
+        other_zone_avoidance_distance 0
+        zone 3
+        land_id NEAR_UPPER_BRIDGE_ID
+    }
+
+    create_land {
+        terrain_type BRIDGE_GROUND
+        land_percent 100
+        base_size 2
+        land_position 50 39
+        left_border 48
+        right_border 48
+        top_border 33
+        bottom_border 55
+        border_fuzziness 0
+        clumping_factor 100
+        other_zone_avoidance_distance 0
+        zone 3
+        land_id NEAR_MIDDLE_BRIDGE_ID
+    }
+
+    create_land {
+        terrain_type BRIDGE_GROUND
+        land_percent 100
+        base_size 2
+        land_position 76 39
+        left_border 74
+        right_border 22
+        top_border 33
+        bottom_border 55
+        border_fuzziness 0
+        clumping_factor 100
+        other_zone_avoidance_distance 0
+        zone 3
+        land_id NEAR_LOWER_BRIDGE_ID
+    }
+
+    /* Southern canal crossings. */
+    create_land {
+        terrain_type BRIDGE_GROUND
+        land_percent 100
+        base_size 2
+        land_position 24 61
+        left_border 22
+        right_border 74
+        top_border 55
+        bottom_border 33
+        border_fuzziness 0
+        clumping_factor 100
+        other_zone_avoidance_distance 0
+        zone 3
+        land_id FAR_UPPER_BRIDGE_ID
+    }
+
+    create_land {
+        terrain_type BRIDGE_GROUND
+        land_percent 100
+        base_size 2
+        land_position 50 61
+        left_border 48
+        right_border 48
+        top_border 55
+        bottom_border 33
+        border_fuzziness 0
+        clumping_factor 100
+        other_zone_avoidance_distance 0
+        zone 3
+        land_id FAR_MIDDLE_BRIDGE_ID
+    }
+
+    create_land {
+        terrain_type BRIDGE_GROUND
+        land_percent 100
+        base_size 2
+        land_position 76 61
+        left_border 74
+        right_border 22
+        top_border 55
+        bottom_border 33
+        border_fuzziness 0
+        clumping_factor 100
+        other_zone_avoidance_distance 0
+        zone 3
+        land_id FAR_LOWER_BRIDGE_ID
+    }
+
+endif
+
+
+<ELEVATION_GENERATION>
+
+/* Intentionally flat: every bridge fight uses the same elevation. */
+
+
+<TERRAIN_GENERATION>
+
+/* Harbor depth varies visually without changing the navigable topology. */
+create_terrain HARBOR_DEEP {
+    base_terrain HARBOR_WATER
+    land_percent 38
+    number_of_clumps 12
+    spacing_to_other_terrain_types 2
+}
+
+/* Small texture patches keep home districts readable and building-friendly. */
+create_terrain PLAYER_DETAIL {
+    base_terrain PLAYER_GROUND
+    land_percent 8
+    number_of_clumps 8
+    spacing_to_other_terrain_types 2
+    set_avoid_player_start_areas 8
+}
+
+create_terrain CENTRAL_DETAIL {
+    base_terrain CENTRAL_GROUND
+    land_percent 14
+    number_of_clumps 6
+    spacing_to_other_terrain_types 1
+}
+
+
+<CONNECTION_GENERATION>
+
+/* The six crossings are explicit lands, so no stochastic connection is used. */
+
+
+<OBJECTS_GENERATION>
+
+/* Mandatory player starts come before every optional resource. */
+create_object TOWN_CENTER {
+    set_place_for_every_player
+    min_distance_to_players 0
+    max_distance_to_players 0
+    force_placement
+    actor_area TC_AREA
+    actor_area_radius 7
+}
+
+/* This tree provides a compact, reliable anchor for all nine villagers. */
+create_object START_TREE {
+    number_of_objects 1
+    set_gaia_object_only
+    set_place_for_every_player
+    min_distance_to_players 5
+    max_distance_to_players 6
+    find_closest
+    force_placement
+    terrain_to_place_on PLAYER_GROUND
+    avoid_other_land_zones 2
+    max_distance_to_other_zones 2
+    actor_area VILLAGER_ANCHOR_AREA
+    actor_area_radius 2
+}
+
+/* An explicit count preserves the tournament's required 9-villager start. */
+create_object VILLAGER {
+    number_of_objects 9
+    set_place_for_every_player
+    actor_area_to_place_in VILLAGER_ANCHOR_AREA
+    force_placement
+}
+
+create_object HOUSE {
+    number_of_objects 2
+    set_place_for_every_player
+    min_distance_to_players 7
+    max_distance_to_players 10
+    find_closest
+    force_placement
+    terrain_to_place_on PLAYER_GROUND
+    avoid_other_land_zones 2
+    max_distance_to_other_zones 2
+    avoid_actor_area TC_AREA
+    temp_min_distance_group_placement 4
+}
+
+create_object SCOUT {
+    number_of_objects 1
+    set_place_for_every_player
+    min_distance_to_players 7
+    max_distance_to_players 9
+    force_placement
+    terrain_to_place_on PLAYER_GROUND
+    avoid_other_land_zones 2
+    max_distance_to_other_zones 2
+}
+
+/* Four immediately usable herdables and four that still require scouting. */
+create_object START_HERDABLE {
+    number_of_objects 4
+    number_of_groups 1
+    group_placement_radius 2
+    set_tight_grouping
+    set_gaia_object_only
+    set_place_for_every_player
+    min_distance_to_players 4
+    max_distance_to_players 7
+    find_closest
+    force_placement
+    terrain_to_place_on PLAYER_GROUND
+    avoid_other_land_zones 2
+    max_distance_to_other_zones 2
+}
+
+create_object START_HERDABLE {
+    number_of_objects 4
+    number_of_groups 1
+    group_placement_radius 3
+    set_tight_grouping
+    set_gaia_object_only
+    set_place_for_every_player
+    min_distance_to_players 9
+    max_distance_to_players 12
+    force_placement
+    terrain_to_place_on PLAYER_GROUND
+    avoid_other_land_zones 2
+    max_distance_to_other_zones 2
+    temp_min_distance_group_placement 4
+}
+
+create_object FORAGE {
+    number_of_objects 6
+    number_of_groups 1
+    group_placement_radius 2
+    set_tight_grouping
+    set_gaia_object_only
+    set_place_for_every_player
+    min_distance_to_players 10
+    max_distance_to_players 14
+    min_distance_to_map_edge 3
+    force_placement
+    terrain_to_place_on PLAYER_GROUND
+    avoid_other_land_zones 2
+    max_distance_to_other_zones 2
+    avoid_actor_area TC_AREA
+    actor_area BERRIES_AREA
+    actor_area_radius 4
+}
+
+create_object START_LUREABLE {
+    number_of_objects 1
+    number_of_groups 1
+    set_gaia_object_only
+    set_place_for_every_player
+    min_distance_to_players 13
+    max_distance_to_players 16
+    min_distance_to_map_edge 2
+    force_placement
+    terrain_to_place_on PLAYER_GROUND
+    avoid_other_land_zones 2
+    max_distance_to_other_zones 2
+    temp_min_distance_group_placement 4
+}
+
+create_object START_LUREABLE {
+    number_of_objects 1
+    number_of_groups 1
+    set_gaia_object_only
+    set_place_for_every_player
+    min_distance_to_players 17
+    max_distance_to_players 20
+    min_distance_to_map_edge 2
+    force_placement
+    terrain_to_place_on PLAYER_GROUND
+    avoid_other_land_zones 2
+    max_distance_to_other_zones 2
+    temp_min_distance_group_placement 6
+}
+
+create_object START_HUNTABLE {
+    number_of_objects 4
+    number_of_groups 1
+    group_placement_radius 4
+    set_loose_grouping
+    set_gaia_object_only
+    set_place_for_every_player
+    min_distance_to_players 14
+    max_distance_to_players 19
+    min_distance_to_map_edge 2
+    force_placement
+    terrain_to_place_on PLAYER_GROUND
+    avoid_other_land_zones 2
+    max_distance_to_other_zones 2
+    temp_min_distance_group_placement 5
+}
+
+/* Safe primary gold; the remaining golds pull play toward the canals. */
+create_object GOLD {
+    number_of_objects 7
+    number_of_groups 1
+    group_placement_radius 3
+    set_tight_grouping
+    set_gaia_object_only
+    set_place_for_every_player
+    min_distance_to_players 11
+    max_distance_to_players 15
+    min_distance_to_map_edge 5
+    find_closest_to_map_edge
+    force_placement
+    terrain_to_place_on PLAYER_GROUND
+    avoid_other_land_zones 2
+    max_distance_to_other_zones 2
+    avoid_actor_area BERRIES_AREA
+    actor_area PRIMARY_GOLD_AREA
+    actor_area_radius 5
+}
+
+create_object GOLD {
+    number_of_objects 4
+    number_of_groups 1
+    group_placement_radius 2
+    set_tight_grouping
+    set_gaia_object_only
+    set_place_for_every_player
+    min_distance_to_players 17
+    max_distance_to_players 21
+    min_distance_to_map_edge 4
+    find_closest_to_map_center
+    force_placement
+    terrain_to_place_on PLAYER_GROUND
+    avoid_other_land_zones 2
+    max_distance_to_other_zones 2
+    avoid_actor_area BERRIES_AREA
+    avoid_actor_area PRIMARY_GOLD_AREA
+    actor_area FORWARD_GOLD_AREA
+    actor_area_radius 5
+}
+
+create_object GOLD {
+    number_of_objects 4
+    number_of_groups 1
+    group_placement_radius 2
+    set_tight_grouping
+    set_gaia_object_only
+    set_place_for_every_player
+    min_distance_to_players 19
+    max_distance_to_players 24
+    min_distance_to_map_edge 4
+    force_placement
+    terrain_to_place_on PLAYER_GROUND
+    avoid_other_land_zones 2
+    max_distance_to_other_zones 2
+    avoid_actor_area BERRIES_AREA
+    avoid_actor_area PRIMARY_GOLD_AREA
+    avoid_actor_area FORWARD_GOLD_AREA
+    actor_area TERTIARY_GOLD_AREA
+    actor_area_radius 5
+}
+
+create_object STONE {
+    number_of_objects 5
+    number_of_groups 1
+    group_placement_radius 3
+    set_tight_grouping
+    set_gaia_object_only
+    set_place_for_every_player
+    min_distance_to_players 14
+    max_distance_to_players 18
+    min_distance_to_map_edge 5
+    find_closest_to_map_edge
+    force_placement
+    terrain_to_place_on PLAYER_GROUND
+    avoid_other_land_zones 2
+    max_distance_to_other_zones 2
+    avoid_actor_area BERRIES_AREA
+    avoid_actor_area PRIMARY_GOLD_AREA
+    actor_area PRIMARY_STONE_AREA
+    actor_area_radius 5
+}
+
+create_object STONE {
+    number_of_objects 4
+    number_of_groups 1
+    group_placement_radius 2
+    set_tight_grouping
+    set_gaia_object_only
+    set_place_for_every_player
+    min_distance_to_players 19
+    max_distance_to_players 24
+    min_distance_to_map_edge 4
+    find_closest_to_map_center
+    force_placement
+    terrain_to_place_on PLAYER_GROUND
+    avoid_other_land_zones 2
+    max_distance_to_other_zones 2
+    avoid_actor_area BERRIES_AREA
+    avoid_actor_area PRIMARY_GOLD_AREA
+    avoid_actor_area FORWARD_GOLD_AREA
+    avoid_actor_area TERTIARY_GOLD_AREA
+    avoid_actor_area PRIMARY_STONE_AREA
+    actor_area FORWARD_STONE_AREA
+    actor_area_radius 5
+}
+
+/* Five additional stragglers ensure a stable opening around the TC. */
+create_object START_TREE {
+    number_of_objects 5
+    set_gaia_object_only
+    set_place_for_every_player
+    min_distance_to_players 5
+    max_distance_to_players 9
+    force_placement
+    terrain_to_place_on PLAYER_GROUND
+    avoid_other_land_zones 2
+    max_distance_to_other_zones 2
+    temp_min_distance_group_placement 1
+    avoid_actor_area TC_AREA
+}
+
+/* Three equal but differently exposed home woodlines. */
+create_object START_TREE {
+    number_of_objects 32
+    number_of_groups 1
+    group_placement_radius 6
+    set_tight_grouping
+    set_gaia_object_only
+    set_place_for_every_player
+    min_distance_to_players 13
+    max_distance_to_players 17
+    min_distance_to_map_edge 8
+    find_closest_to_map_edge
+    force_placement
+    terrain_to_place_on PLAYER_GROUND
+    avoid_other_land_zones 2
+    max_distance_to_other_zones 2
+    avoid_actor_area BERRIES_AREA
+    avoid_actor_area PRIMARY_GOLD_AREA
+    avoid_actor_area PRIMARY_STONE_AREA
+    actor_area SAFE_WOOD_AREA
+    actor_area_radius 8
+}
+
+create_object START_TREE {
+    number_of_objects 28
+    number_of_groups 1
+    group_placement_radius 6
+    set_tight_grouping
+    set_gaia_object_only
+    set_place_for_every_player
+    min_distance_to_players 18
+    max_distance_to_players 22
+    min_distance_to_map_edge 7
+    find_closest_to_map_center
+    force_placement
+    terrain_to_place_on PLAYER_GROUND
+    avoid_other_land_zones 2
+    max_distance_to_other_zones 2
+    avoid_actor_area BERRIES_AREA
+    avoid_actor_area PRIMARY_GOLD_AREA
+    avoid_actor_area FORWARD_GOLD_AREA
+    avoid_actor_area TERTIARY_GOLD_AREA
+    avoid_actor_area PRIMARY_STONE_AREA
+    avoid_actor_area FORWARD_STONE_AREA
+    avoid_actor_area SAFE_WOOD_AREA
+    actor_area FORWARD_WOOD_AREA
+    actor_area_radius 8
+}
+
+create_object START_TREE {
+    number_of_objects 24
+    number_of_groups 1
+    group_placement_radius 5
+    set_tight_grouping
+    set_gaia_object_only
+    set_place_for_every_player
+    min_distance_to_players 20
+    max_distance_to_players 26
+    min_distance_to_map_edge 6
+    force_placement
+    terrain_to_place_on PLAYER_GROUND
+    avoid_other_land_zones 2
+    max_distance_to_other_zones 2
+    avoid_actor_area BERRIES_AREA
+    avoid_actor_area PRIMARY_GOLD_AREA
+    avoid_actor_area FORWARD_GOLD_AREA
+    avoid_actor_area TERTIARY_GOLD_AREA
+    avoid_actor_area PRIMARY_STONE_AREA
+    avoid_actor_area FORWARD_STONE_AREA
+    avoid_actor_area SAFE_WOOD_AREA
+    avoid_actor_area FORWARD_WOOD_AREA
+}
+
+/* Equal home-water food: enough to reward a dock without forcing one. */
+create_object SHORE_FISH {
+    number_of_objects 4
+    number_of_groups 1
+    group_placement_radius 6
+    set_loose_grouping
+    set_gaia_object_only
+    set_place_for_every_player
+    min_distance_to_players 16
+    max_distance_to_players 25
+    min_distance_to_map_edge 6
+    terrain_to_place_on HARBOR_WATER
+    temp_min_distance_group_placement 4
+}
+
+create_object HARBOR_FISH {
+    number_of_objects 3
+    number_of_groups 2
+    group_placement_radius 7
+    set_loose_grouping
+    set_gaia_object_only
+    set_place_for_every_player
+    min_distance_to_players 19
+    max_distance_to_players 33
+    min_distance_to_map_edge 6
+    terrain_to_place_on HARBOR_WATER
+    temp_min_distance_group_placement 8
+}
+
+/* The island is always equidistant from the mirrored starting positions. */
+create_object GOLD {
+    number_of_objects 3
+    number_of_groups 4
+    group_placement_radius 2
+    set_tight_grouping
+    set_gaia_object_only
+    place_on_specific_land_id CENTRAL_ISLAND_ID
+    avoid_other_land_zones 2
+    min_distance_group_placement 13
+}
+
+create_object STONE {
+    number_of_objects 4
+    number_of_groups 2
+    group_placement_radius 2
+    set_tight_grouping
+    set_gaia_object_only
+    place_on_specific_land_id CENTRAL_ISLAND_ID
+    avoid_other_land_zones 2
+    min_distance_group_placement 24
+}
+
+create_object RELIC {
+    number_of_objects 5
+    set_gaia_object_only
+    place_on_specific_land_id CENTRAL_ISLAND_ID
+    avoid_other_land_zones 2
+    min_distance_group_placement 12
+}
+
+create_object START_TREE {
+    number_of_objects 12
+    number_of_groups 4
+    group_placement_radius 4
+    set_tight_grouping
+    set_gaia_object_only
+    place_on_specific_land_id CENTRAL_ISLAND_ID
+    avoid_other_land_zones 2
+    min_distance_group_placement 12
+}
+
+/* Normal Gaia rubble: visual church landmarks with no modified behavior. */
+create_object CHURCH_RUIN {
+    number_of_objects 1
+    number_of_groups 2
+    group_placement_radius 1
+    set_gaia_object_only
+    place_on_specific_land_id CENTRAL_ISLAND_ID
+    avoid_other_land_zones 2
+    find_closest_to_map_edge
+    ignore_terrain_restrictions
+    min_distance_group_placement 42
+}

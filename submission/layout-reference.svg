@@ -1,0 +1,103 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="900" viewBox="0 0 1600 900">
+  <rect width="1600" height="900" fill="#f3f4f1"/>
+
+  <text x="88" y="76" font-family="Arial, sans-serif" font-size="42" font-weight="700" fill="#202522">SPEICHERSTADT</text>
+  <text x="88" y="112" font-family="Arial, sans-serif" font-size="18" fill="#59615c">The Garrison 2026 competition candidate | topology reference</text>
+  <rect x="1258" y="62" width="254" height="45" rx="4" fill="#202522"/>
+  <text x="1385" y="90" text-anchor="middle" font-family="Arial, sans-serif" font-size="14" font-weight="700" fill="#ffffff">NOT AN IN-GAME SCREENSHOT</text>
+
+  <rect x="88" y="150" width="1120" height="672" rx="6" fill="#2d8390" stroke="#202522" stroke-width="3"/>
+  <path d="M88 150H456V822H88Z" fill="#7d9f62"/>
+  <path d="M840 150H1208V822H840Z" fill="#7d9f62"/>
+  <path d="M552 204H744V768H552Z" fill="#aa8a5d" stroke="#72593d" stroke-width="2"/>
+
+  <path d="M456 150H552V204H744V150H840V822H744V768H552V822H456Z" fill="#2d8390"/>
+  <path d="M472 150H536V204H760V150H824V822H760V768H536V822H472Z" fill="#357f9b" opacity="0.42"/>
+  <path d="M552 204H744V768H552Z" fill="#aa8a5d" stroke="#72593d" stroke-width="2"/>
+
+  <g fill="#8ac9c0" stroke="#e5f0e7" stroke-width="2">
+    <rect x="438" y="282" width="132" height="34"/>
+    <rect x="726" y="282" width="132" height="34"/>
+    <rect x="438" y="469" width="132" height="34"/>
+    <rect x="726" y="469" width="132" height="34"/>
+    <rect x="438" y="656" width="132" height="34"/>
+    <rect x="726" y="656" width="132" height="34"/>
+  </g>
+
+  <g fill="#756e62">
+    <rect x="552" y="282" width="192" height="34"/>
+    <rect x="552" y="469" width="192" height="34"/>
+    <rect x="552" y="656" width="192" height="34"/>
+  </g>
+
+  <g font-family="Arial, sans-serif" font-size="16" font-weight="700" fill="#ffffff">
+    <circle cx="278" cy="486" r="40" fill="#2867ad" stroke="#ffffff" stroke-width="5"/>
+    <text x="278" y="492" text-anchor="middle">P1</text>
+    <circle cx="1018" cy="486" r="40" fill="#b63a35" stroke="#ffffff" stroke-width="5"/>
+    <text x="1018" y="492" text-anchor="middle">P2</text>
+  </g>
+
+  <g fill="#3e633e">
+    <circle cx="200" cy="322" r="28"/><circle cx="252" cy="300" r="24"/><circle cx="315" cy="328" r="30"/>
+    <circle cx="192" cy="658" r="30"/><circle cx="260" cy="685" r="26"/><circle cx="330" cy="650" r="27"/>
+    <circle cx="966" cy="326" r="27"/><circle cx="1030" cy="300" r="25"/><circle cx="1090" cy="334" r="30"/>
+    <circle cx="962" cy="654" r="30"/><circle cx="1032" cy="686" r="26"/><circle cx="1100" cy="648" r="27"/>
+    <circle cx="612" cy="250" r="18"/><circle cx="682" cy="250" r="18"/>
+    <circle cx="612" cy="720" r="18"/><circle cx="682" cy="720" r="18"/>
+  </g>
+
+  <g stroke="#4b4233" stroke-width="3" fill="#d6b64f">
+    <circle cx="372" cy="394" r="12"/><circle cx="923" cy="577" r="12"/>
+    <circle cx="618" cy="372" r="11"/><circle cx="680" cy="598" r="11"/>
+  </g>
+  <g stroke="#4b4233" stroke-width="3" fill="#aeb5b8">
+    <rect x="353" y="570" width="22" height="22"/><rect x="930" y="390" width="22" height="22"/>
+    <rect x="662" y="390" width="20" height="20"/><rect x="612" y="580" width="20" height="20"/>
+  </g>
+
+  <g fill="#f4e9c5" stroke="#6d603f" stroke-width="2">
+    <circle cx="648" cy="236" r="10"/><circle cx="648" cy="365" r="10"/><circle cx="648" cy="486" r="10"/>
+    <circle cx="648" cy="607" r="10"/><circle cx="648" cy="736" r="10"/>
+  </g>
+
+  <g fill="#6b6257" stroke="#efe9dc" stroke-width="2">
+    <path d="M600 218h20v30h-20zM605 208h10v10h-10z"/>
+    <path d="M678 704h20v30h-20zM683 694h10v10h-10z"/>
+  </g>
+
+  <g fill="#d8e7df">
+    <ellipse cx="505" cy="392" rx="9" ry="16"/><ellipse cx="515" cy="430" rx="9" ry="16"/>
+    <ellipse cx="790" cy="552" rx="9" ry="16"/><ellipse cx="782" cy="590" rx="9" ry="16"/>
+  </g>
+
+  <g font-family="Arial, sans-serif" fill="#202522">
+    <text x="1300" y="180" font-size="18" font-weight="700">TACTICAL STRUCTURE</text>
+    <line x1="1300" y1="194" x2="1510" y2="194" stroke="#a9ada9" stroke-width="2"/>
+
+    <circle cx="1312" cy="232" r="8" fill="#8ac9c0" stroke="#4f7d78" stroke-width="2"/>
+    <text x="1332" y="238" font-size="16">Six shallow crossings</text>
+
+    <rect x="1304" y="266" width="16" height="16" fill="#357f9b"/>
+    <text x="1332" y="280" font-size="16">Connected canal loop</text>
+
+    <rect x="1304" y="308" width="16" height="16" fill="#aa8a5d"/>
+    <text x="1332" y="322" font-size="16">Contested island</text>
+
+    <circle cx="1312" cy="358" r="8" fill="#f4e9c5" stroke="#6d603f" stroke-width="2"/>
+    <text x="1332" y="364" font-size="16">Five central relics</text>
+
+    <circle cx="1312" cy="400" r="8" fill="#d6b64f" stroke="#4b4233" stroke-width="2"/>
+    <text x="1332" y="406" font-size="16">Gold control points</text>
+
+    <text x="1300" y="480" font-size="18" font-weight="700">PLAYER CHOICES</text>
+    <line x1="1300" y1="494" x2="1510" y2="494" stroke="#a9ada9" stroke-width="2"/>
+    <text x="1300" y="532" font-size="16">1. Fast middle pressure</text>
+    <text x="1300" y="568" font-size="16">2. Outer-lane raids</text>
+    <text x="1300" y="604" font-size="16">3. Canal navy</text>
+    <text x="1300" y="640" font-size="16">4. Island resource control</text>
+
+    <text x="1300" y="724" font-size="14" fill="#59615c">The full map may rotate 90 degrees.</text>
+    <text x="1300" y="750" font-size="14" fill="#59615c">Player colors swap independently.</text>
+    <text x="1300" y="792" font-size="14" font-weight="700">Geometry is mirrored in every result.</text>
+  </g>
+</svg>
