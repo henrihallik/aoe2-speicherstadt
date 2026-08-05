@@ -1,6 +1,6 @@
 /* Compatibility: Definitive Edition */
 /*
-    Speicherstadt v0.3.0
+    Speicherstadt v0.4.0
     The Garrison 2026 map competition release candidate.
 
     Designed for:
@@ -33,6 +33,7 @@
 #const HARBOR_WATER 23
 #const HARBOR_DEEP 22
 #const BRIDGE_GROUND 4
+#const OAK_FOREST 10
 
 /* Object aliases. */
 #const START_HERDABLE 594
@@ -63,6 +64,7 @@
 #const FAR_UPPER_BRIDGE_ZONE 34
 #const FAR_MIDDLE_BRIDGE_ZONE 35
 #const FAR_LOWER_BRIDGE_ZONE 36
+#const CORNER_FOREST_ZONE 40
 
 /* Actor areas used only for fair placement separation. */
 #const TC_AREA 1000
@@ -431,6 +433,71 @@ else
 
 endif
 
+/*
+    Four fixed forests occupy the geometric corners in both rotations. Each
+    player side therefore receives two equal 90-tile outer forests, while the
+    constrained boxes keep them clear of canals and crossing approaches.
+*/
+create_land {
+    terrain_type OAK_FOREST
+    number_of_tiles 90
+    base_size 2
+    land_position 8 8
+    left_border 2
+    right_border 70
+    top_border 2
+    bottom_border 70
+    border_fuzziness 100
+    clumping_factor 15
+    other_zone_avoidance_distance 0
+    zone CORNER_FOREST_ZONE
+}
+
+create_land {
+    terrain_type OAK_FOREST
+    number_of_tiles 90
+    base_size 2
+    land_position 92 8
+    left_border 70
+    right_border 2
+    top_border 2
+    bottom_border 70
+    border_fuzziness 100
+    clumping_factor 15
+    other_zone_avoidance_distance 0
+    zone CORNER_FOREST_ZONE
+}
+
+create_land {
+    terrain_type OAK_FOREST
+    number_of_tiles 90
+    base_size 2
+    land_position 8 92
+    left_border 2
+    right_border 70
+    top_border 70
+    bottom_border 2
+    border_fuzziness 100
+    clumping_factor 15
+    other_zone_avoidance_distance 0
+    zone CORNER_FOREST_ZONE
+}
+
+create_land {
+    terrain_type OAK_FOREST
+    number_of_tiles 90
+    base_size 2
+    land_position 92 92
+    left_border 70
+    right_border 2
+    top_border 70
+    bottom_border 2
+    border_fuzziness 100
+    clumping_factor 15
+    other_zone_avoidance_distance 0
+    zone CORNER_FOREST_ZONE
+}
+
 
 <ELEVATION_GENERATION>
 
@@ -445,6 +512,19 @@ create_terrain HARBOR_DEEP {
     land_percent 38
     number_of_clumps 12
     spacing_to_other_terrain_types 2
+}
+
+/*
+    Distributed mainland forests fill the large outer districts that cannot
+    be covered reliably by player-relative object groups alone.
+*/
+create_terrain OAK_FOREST {
+    base_terrain PLAYER_GROUND
+    land_percent 7
+    number_of_clumps 16
+    clumping_factor 15
+    spacing_to_other_terrain_types 3
+    set_avoid_player_start_areas 14
 }
 
 /* Small texture patches keep home districts readable and building-friendly. */

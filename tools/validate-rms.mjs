@@ -181,6 +181,7 @@ for (const [name, value] of [
   ["HARBOR_WATER", 23],
   ["HARBOR_DEEP", 22],
   ["BRIDGE_GROUND", 4],
+  ["OAK_FOREST", 10],
   ["NEAR_MAINLAND_ZONE", 11],
   ["FAR_MAINLAND_ZONE", 12],
   ["CENTRAL_ISLAND_ZONE", 20],
@@ -190,6 +191,7 @@ for (const [name, value] of [
   ["FAR_UPPER_BRIDGE_ZONE", 34],
   ["FAR_MIDDLE_BRIDGE_ZONE", 35],
   ["FAR_LOWER_BRIDGE_ZONE", 36],
+  ["CORNER_FOREST_ZONE", 40],
   ["START_HERDABLE", 594],
   ["START_LUREABLE", 48],
   ["START_HUNTABLE", 65],
@@ -237,6 +239,7 @@ const landsByTerrain = (terrain) =>
 assert.equal(landsByTerrain("PLAYER_GROUND").length, 4, "two rotated pairs of mainlands required");
 assert.equal(landsByTerrain("CENTRAL_GROUND").length, 2, "one island per rotation required");
 assert.equal(landsByTerrain("BRIDGE_GROUND").length, 12, "six bridges per rotation required");
+assert.equal(landsByTerrain("OAK_FOREST").length, 4, "all four map corners need fixed forests");
 assert.ok(!/\bROAD_GROUND\b/.test(code), "detached decorative road lands must not return");
 
 for (const block of landsByTerrain("PLAYER_GROUND")) {
@@ -246,20 +249,23 @@ for (const block of landsByTerrain("PLAYER_GROUND")) {
 
 for (const block of landBlocks) {
   const landId = valueFor("land_id", block.body);
+  const terrain = valueFor("terrain_type", block.body);
+  const position = pairFor("land_position", block.body)?.join(",") ?? "unknown";
+  const label = landId ?? `${terrain}@${position}`;
   assert.equal(
     valueFor("border_fuzziness", block.body),
     "100",
-    `${landId} must fully respect its borders (AoE2 treats 0 as ignoring them)`,
+    `${label} must fully respect its borders (AoE2 treats 0 as ignoring them)`,
   );
   assert.equal(
     valueFor("clumping_factor", block.body),
-    "100",
-    `${landId} needs full clumping`,
+    terrain === "OAK_FOREST" ? "15" : "100",
+    `${label} has the wrong clumping factor`,
   );
   assert.equal(
     valueFor("other_zone_avoidance_distance", block.body),
     "0",
-    `${landId} must meet adjacent lands without avoidance gaps`,
+    `${label} must meet adjacent lands without avoidance gaps`,
   );
 }
 
@@ -310,6 +316,37 @@ assert.deepEqual(
   ].sort(),
   "player mainlands must reach the outer edge without creating a back-water strip",
 );
+
+const cornerForests = landsByTerrain("OAK_FOREST");
+const cornerForestGeometry = cornerForests
+  .map((block) => {
+    const [x, y] = pairFor("land_position", block.body);
+    const borders = ["left_border", "right_border", "top_border", "bottom_border"]
+      .map((attribute) => valueFor(attribute, block.body))
+      .join(",");
+    return `${x},${y}:${borders}`;
+  })
+  .sort();
+assert.deepEqual(
+  cornerForestGeometry,
+  [
+    "8,8:2,70,2,70",
+    "92,8:70,2,2,70",
+    "8,92:2,70,70,2",
+    "92,92:70,2,70,2",
+  ].sort(),
+  "the four fixed forests must occupy mirrored corner boxes",
+);
+for (const forest of cornerForests) {
+  assert.equal(valueFor("number_of_tiles", forest.body), "90");
+  assert.equal(valueFor("base_size", forest.body), "2");
+  assert.equal(valueFor("zone", forest.body), "CORNER_FOREST_ZONE");
+  assert.equal(
+    valueFor("land_id", forest.body),
+    undefined,
+    "corner forests need no object land ID",
+  );
+}
 
 const landIdCounts = new Map();
 for (const landId of valuesFor("land_id", code)) {
@@ -395,7 +432,9 @@ function landOriginSquare(block) {
   const toTiles = (percent) => (percent * tinyMapTiles) / 100;
 
   return {
-    id: valueFor("land_id", block.body),
+    id:
+      valueFor("land_id", block.body) ??
+      `${valueFor("terrain_type", block.body)}@${xPercent},${yPercent}`,
     minX: toTiles(xPercent) - baseSize,
     maxX: toTiles(xPercent) + baseSize,
     minY: toTiles(yPercent) - baseSize,
@@ -417,12 +456,14 @@ function squaresOverlap(first, second) {
 }
 
 for (const orientationIndex of [0, 1]) {
-  const origins = fixedLandIds.map((landId) => {
-    const pair = landBlocks.filter(
-      (block) => valueFor("land_id", block.body) === landId,
-    );
-    return landOriginSquare(pair[orientationIndex]);
-  });
+  const origins = fixedLandIds
+    .map((landId) => {
+      const pair = landBlocks.filter(
+        (block) => valueFor("land_id", block.body) === landId,
+      );
+      return landOriginSquare(pair[orientationIndex]);
+    })
+    .concat(cornerForests.map(landOriginSquare));
 
   for (const origin of origins) {
     assert.ok(
@@ -447,13 +488,19 @@ for (const orientationIndex of [0, 1]) {
 }
 
 const terrainBlocks = blocksFor("create_terrain", code);
-assert.equal(terrainBlocks.length, 3, "only three visual terrain passes are expected");
-for (const terrain of ["HARBOR_DEEP", "PLAYER_DETAIL", "CENTRAL_DETAIL"]) {
-  assert.ok(
-    terrainBlocks.some((block) => block.name === terrain),
-    `missing visual terrain pass ${terrain}`,
-  );
-}
+assert.deepEqual(
+  terrainBlocks.map((block) => block.name),
+  ["HARBOR_DEEP", "OAK_FOREST", "PLAYER_DETAIL", "CENTRAL_DETAIL"],
+  "forest generation must precede the visual player-ground pass",
+);
+
+const distributedForest = terrainBlocks.find((block) => block.name === "OAK_FOREST");
+assert.equal(valueFor("base_terrain", distributedForest.body), "PLAYER_GROUND");
+assert.equal(valueFor("land_percent", distributedForest.body), "7");
+assert.equal(valueFor("number_of_clumps", distributedForest.body), "16");
+assert.equal(valueFor("clumping_factor", distributedForest.body), "15");
+assert.equal(valueFor("spacing_to_other_terrain_types", distributedForest.body), "3");
+assert.equal(valueFor("set_avoid_player_start_areas", distributedForest.body), "14");
 
 const connections = zoneConnectionBlocks(code);
 assert.ok(
@@ -638,7 +685,8 @@ console.log(`PASS ${rmsPath}`);
 console.log(`  ${source.split("\n").length} lines, ${source.length} bytes`);
 console.log("  topology: 2 connected canals, 1 central island, 6 crossings");
 console.log("  quick start: 9 generic villagers, 2 houses, standard resource adjustment");
-console.log("  per player: 8 sheep, 2 boar, 4 deer, 15 gold, 9 stone, 180 trees");
+console.log("  per player: 8 sheep, 2 boar, 4 deer, 15 gold, 9 stone, 180 home trees");
+console.log("  mainland wood: 4 fixed 90-tile corner forests + 7% distributed forest terrain");
 console.log("  per player water: 4 shore fish, 6 deep fish");
 console.log("  neutral island: 12 gold, 8 stone, 5 relics, 48 trees, 2 church ruins");
 console.log("  integrity: no unit/building attribute changes or scripted income");

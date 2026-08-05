@@ -1,18 +1,19 @@
 # Static Validation Report
 
-Candidate: Speicherstadt v0.3.0
+Candidate: Speicherstadt v0.4.0
 Checked: 2026-08-05
-RMS SHA-256: `c6a1acb459fdafc0f9a377fd5ef4be1211309e8d5f9dcb794727bae9a1d32841`
+RMS SHA-256: `98acc664a50c8c2e2a65b2b372c85829af666da6491bfa91fa21fd67ac9f7f64`
 
 ## Map-Specific Validator
 
 `node tools/validate-rms.mjs` passes. It checks the section and control
 structure, exact transposed geometry, six crossing rectangles, non-overlapping
 land-origin squares, `border_fuzziness 100` on every constrained land, flat
-elevation, twelve dedicated zone-to-zone seam connections, explicit 9-villager
-start, three equal 58-tree home woodlines, mandatory five-relic placement,
-object/resource totals, actor-area references, land confinement, neutral
-ownership, and the competition's prohibited mechanics.
+elevation, four mirrored 90-tile corner forests, the 16-clump distributed
+forest pass, twelve dedicated zone-to-zone seam connections, explicit
+9-villager start, three equal 58-tree home woodlines, mandatory five-relic
+placement, object/resource totals, actor-area references, land confinement,
+neutral ownership, and the competition's prohibited mechanics.
 
 ## Current RMS Grammar
 
@@ -50,5 +51,7 @@ restored the recognizable two-canal layout, but screenshots exposed water seams
 between crossings and banks, only 90 home trees, and four placed relics instead
 of five. Version 0.3.0 removes detached decorative road lands, gives every
 crossing a dedicated zone and four explicit seam connections, raises home wood
-to 180 trees, and makes five relics mandatory with reduced spacing. Its in-game
-retest, full seed matrix, and match checks remain pending.
+to 180 trees, and makes five relics mandatory with reduced spacing. Version
+0.4.0 additionally reserves a 90-tile forest in every geometric corner and
+generates 7% more player-ground forest in 16 clumps. Its in-game retest, full
+seed matrix, and match checks remain pending.

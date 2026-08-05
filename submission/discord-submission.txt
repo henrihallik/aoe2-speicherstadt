@@ -4,7 +4,7 @@ Category: 1v1 hybrid map
 
 Speicherstadt places the players on mirrored mainland districts facing a long central warehouse island. Two navigable canals wrap around the island and connect at both ends. Three shallow crossings span each canal, creating a direct middle attack, two flanking routes, and an island where armies can switch lanes.
 
-Water is valuable but optional. Ships can contest fish, influence all six crossings, and rotate around the island, while every player retains complete land routes and a normal home economy. Safe primary resources support stable openings; forward secondary resources and the island's gold, stone, wood, and five relics reward map control and adaptation.
+Water is valuable but optional. Ships can contest fish, influence all six crossings, and rotate around the island, while every player retains complete land routes and a normal home economy. Equal home woodlines and mirrored corner forests secure the wood baseline, while additional mainland groves vary between generations. Safe primary resources support stable openings; forward secondary resources and the island's gold, stone, wood, and five relics reward map control and adaptation.
 
 The map uses the required 9-villager start with two houses. Its full topology rotates by 90 degrees between generations, player colors swap independently, and all gameplay geometry remains mirrored. It does not modify unit or building behavior and uses no triggers, XS, custom includes, scripted income, or capturable objects.
 

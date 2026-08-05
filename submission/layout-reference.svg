@@ -32,6 +32,14 @@
   </g>
 
   <g fill="#3e633e">
+    <circle cx="126" cy="192" r="25"/><circle cx="166" cy="210" r="22"/>
+    <circle cx="126" cy="780" r="25"/><circle cx="166" cy="760" r="22"/>
+    <circle cx="390" cy="218" r="24"/><circle cx="420" cy="246" r="20"/>
+    <circle cx="390" cy="754" r="24"/><circle cx="420" cy="728" r="20"/>
+    <circle cx="1170" cy="192" r="25"/><circle cx="1130" cy="210" r="22"/>
+    <circle cx="1170" cy="780" r="25"/><circle cx="1130" cy="760" r="22"/>
+    <circle cx="906" cy="218" r="24"/><circle cx="876" cy="246" r="20"/>
+    <circle cx="906" cy="754" r="24"/><circle cx="876" cy="728" r="20"/>
     <circle cx="200" cy="322" r="28"/><circle cx="252" cy="300" r="24"/><circle cx="315" cy="328" r="30"/>
     <circle cx="192" cy="658" r="30"/><circle cx="260" cy="685" r="26"/><circle cx="330" cy="650" r="27"/>
     <circle cx="966" cy="326" r="27"/><circle cx="1030" cy="300" r="25"/><circle cx="1090" cy="334" r="30"/>
@@ -83,12 +91,15 @@
     <circle cx="1312" cy="400" r="8" fill="#d6b64f" stroke="#4b4233" stroke-width="2"/>
     <text x="1332" y="406" font-size="16">Gold control points</text>
 
-    <text x="1300" y="480" font-size="18" font-weight="700">PLAYER CHOICES</text>
-    <line x1="1300" y1="494" x2="1510" y2="494" stroke="#a9ada9" stroke-width="2"/>
-    <text x="1300" y="532" font-size="16">1. Fast middle pressure</text>
-    <text x="1300" y="568" font-size="16">2. Outer-lane raids</text>
-    <text x="1300" y="604" font-size="16">3. Canal navy</text>
-    <text x="1300" y="640" font-size="16">4. Island resource control</text>
+    <circle cx="1312" cy="442" r="8" fill="#3e633e"/>
+    <text x="1332" y="448" font-size="16">Mainland forests</text>
+
+    <text x="1300" y="500" font-size="18" font-weight="700">PLAYER CHOICES</text>
+    <line x1="1300" y1="514" x2="1510" y2="514" stroke="#a9ada9" stroke-width="2"/>
+    <text x="1300" y="552" font-size="16">1. Fast middle pressure</text>
+    <text x="1300" y="588" font-size="16">2. Outer-lane raids</text>
+    <text x="1300" y="624" font-size="16">3. Canal navy</text>
+    <text x="1300" y="660" font-size="16">4. Island resource control</text>
 
     <text x="1300" y="724" font-size="14" fill="#59615c">The full map may rotate 90 degrees.</text>
     <text x="1300" y="750" font-size="14" fill="#59615c">Player colors swap independently.</text>

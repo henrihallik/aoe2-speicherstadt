@@ -4,9 +4,11 @@ Static parsers cannot prove that AoE2 DE will generate, place, and path every
 object correctly. Complete this checklist in the same current game build that
 will be used for the submission.
 
-Test v0.3.0 or newer. Version 0.1.0 failed its large-scale topology. Version
+Test v0.4.0 or newer. Version 0.1.0 failed its large-scale topology. Version
 0.2.0 restored the intended layout, but screenshot testing found water seams at
 the crossing banks, insufficient home wood, and only four of five relics.
+Version 0.3.0 repaired the joins and relic placement constraints, but still
+left the outer mainland and all four map corners almost completely empty.
 
 ## Required Lobby
 
@@ -48,6 +50,8 @@ color assignments.
   home stone.
 - Each player has three 58-tree home woodlines and six TC stragglers, for 180
   home trees total.
+- Each player side has two fixed corner forests, and additional forest clumps
+  are distributed through the outer mainland. No map corner is barren.
 - Each home canal has 4 shore fish and 6 deep fish.
 - The island has 12 gold, 8 stone, exactly 5 visible relics, four wood clusters,
   and two church ruins.

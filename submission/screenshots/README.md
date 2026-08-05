@@ -8,7 +8,7 @@ reference or AI-generated art.
 - Generate with All Visible and pause immediately.
 - Capture or stitch the complete map without lobby or menu overlays.
 - Show both player districts, the full warehouse island, both connected canals,
-  and all six crossings.
+  all six crossings, and the forest coverage in all four map corners.
 
 ## 02-warehouse-island.png
 

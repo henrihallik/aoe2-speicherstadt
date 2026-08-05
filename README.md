@@ -3,12 +3,12 @@
 `Speicherstadt` is a 1v1 hybrid Random Map submission candidate for **The
 Garrison 2026 map competition**. It is designed by betwixtX with OpenAI Codex.
 
-**Current status:** v0.3.0 runtime correction pending an in-game retest and
-authentic AoE2 DE screenshots. Version 0.2.0 confirmed the intended large-scale
-layout, but separate crossing lands left water seams at their banks, its 90
-home trees were insufficient, and only four of five relics placed. Version
-0.3.0 explicitly connects every crossing join, doubles home wood, and makes all
-five central relics mandatory.
+**Current status:** v0.4.0 runtime correction pending an in-game retest and
+authentic AoE2 DE screenshots. Version 0.3.0 repaired the crossing joins and
+made all five central relics mandatory, but its player-relative tree groups
+still left the large outer districts and map corners barren. Version 0.4.0
+keeps the equal home woodlines and adds fixed corner forests plus distributed
+mainland forest terrain.
 
 ## Concept
 
@@ -33,8 +33,10 @@ player colors between sides. The geometry remains mirrored in every result.
 - Quick-start resources: -30 starting wood and -100 starting food
 - Per player: 8 sheep, 2 boar, 4 deer, 6 berries
 - Per player mines: 7+4+4 gold and 5+4 stone
-- Per player wood: 180 guaranteed oak trees, including three equal 58-tree
-  woodlines in different exposure profiles
+- Per player home wood: 180 guaranteed oak trees, including three equal
+  58-tree woodlines in different exposure profiles
+- Mainland wood: two fixed 90-tile corner forests per side plus a 7% forest
+  pass split into 16 clumps across the player districts
 - Per player water: 4 shore fish and 6 deep fish
 - Neutral island: four 3-tile golds, two 4-tile stones, 5 relics, and 48 trees
 - Flat elevation across all six crossings
