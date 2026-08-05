@@ -64,6 +64,34 @@ function blocksFor(command, text, hasName = true) {
   return blocks;
 }
 
+function zoneConnectionBlocks(text) {
+  const blocks = [];
+  const pattern = /\bcreate_connect_land_zones\s+([^\s{}]+)\s+([^\s{}]+)\s*\{/g;
+  let match;
+
+  while ((match = pattern.exec(text)) !== null) {
+    const open = text.indexOf("{", match.index);
+    let depth = 1;
+    let cursor = open + 1;
+
+    while (cursor < text.length && depth > 0) {
+      if (text[cursor] === "{") depth += 1;
+      if (text[cursor] === "}") depth -= 1;
+      cursor += 1;
+    }
+
+    assert.equal(depth, 0, `unclosed zone connection ${match[1]} ${match[2]}`);
+    blocks.push({
+      from: match[1],
+      to: match[2],
+      body: text.slice(open + 1, cursor - 1),
+    });
+    pattern.lastIndex = cursor;
+  }
+
+  return blocks;
+}
+
 function valuesFor(attribute, text) {
   return [
     ...text.matchAll(new RegExp(`\\b${attribute}\\s+([^\\s{}]+)`, "g")),
@@ -153,7 +181,15 @@ for (const [name, value] of [
   ["HARBOR_WATER", 23],
   ["HARBOR_DEEP", 22],
   ["BRIDGE_GROUND", 4],
-  ["ROAD_GROUND", 24],
+  ["NEAR_MAINLAND_ZONE", 11],
+  ["FAR_MAINLAND_ZONE", 12],
+  ["CENTRAL_ISLAND_ZONE", 20],
+  ["NEAR_UPPER_BRIDGE_ZONE", 31],
+  ["NEAR_MIDDLE_BRIDGE_ZONE", 32],
+  ["NEAR_LOWER_BRIDGE_ZONE", 33],
+  ["FAR_UPPER_BRIDGE_ZONE", 34],
+  ["FAR_MIDDLE_BRIDGE_ZONE", 35],
+  ["FAR_LOWER_BRIDGE_ZONE", 36],
   ["START_HERDABLE", 594],
   ["START_LUREABLE", 48],
   ["START_HUNTABLE", 65],
@@ -200,13 +236,12 @@ const landsByTerrain = (terrain) =>
 
 assert.equal(landsByTerrain("PLAYER_GROUND").length, 4, "two rotated pairs of mainlands required");
 assert.equal(landsByTerrain("CENTRAL_GROUND").length, 2, "one island per rotation required");
-assert.equal(landsByTerrain("ROAD_GROUND").length, 6, "three roads per rotation required");
 assert.equal(landsByTerrain("BRIDGE_GROUND").length, 12, "six bridges per rotation required");
+assert.ok(!/\bROAD_GROUND\b/.test(code), "detached decorative road lands must not return");
 
 for (const block of landsByTerrain("PLAYER_GROUND")) {
   assert.match(block.body, /\bassign_to_player\s+1\b/, "mainland must support player 1");
   assert.match(block.body, /\bassign_to_player\s+2\b/, "mainland must support player 2");
-  assert.match(block.body, /\bzone\s+1\b/, "player mainland must remain in zone 1");
 }
 
 for (const block of landBlocks) {
@@ -284,9 +319,6 @@ const fixedLandIds = [
   "NEAR_MAINLAND_ID",
   "FAR_MAINLAND_ID",
   "CENTRAL_ISLAND_ID",
-  "UPPER_ROAD_ID",
-  "MIDDLE_ROAD_ID",
-  "LOWER_ROAD_ID",
   "NEAR_UPPER_BRIDGE_ID",
   "NEAR_MIDDLE_BRIDGE_ID",
   "NEAR_LOWER_BRIDGE_ID",
@@ -294,6 +326,18 @@ const fixedLandIds = [
   "FAR_MIDDLE_BRIDGE_ID",
   "FAR_LOWER_BRIDGE_ID",
 ];
+
+const expectedZoneByLandId = new Map([
+  ["NEAR_MAINLAND_ID", "NEAR_MAINLAND_ZONE"],
+  ["FAR_MAINLAND_ID", "FAR_MAINLAND_ZONE"],
+  ["CENTRAL_ISLAND_ID", "CENTRAL_ISLAND_ZONE"],
+  ["NEAR_UPPER_BRIDGE_ID", "NEAR_UPPER_BRIDGE_ZONE"],
+  ["NEAR_MIDDLE_BRIDGE_ID", "NEAR_MIDDLE_BRIDGE_ZONE"],
+  ["NEAR_LOWER_BRIDGE_ID", "NEAR_LOWER_BRIDGE_ZONE"],
+  ["FAR_UPPER_BRIDGE_ID", "FAR_UPPER_BRIDGE_ZONE"],
+  ["FAR_MIDDLE_BRIDGE_ID", "FAR_MIDDLE_BRIDGE_ZONE"],
+  ["FAR_LOWER_BRIDGE_ID", "FAR_LOWER_BRIDGE_ZONE"],
+]);
 
 function landGeometry(block) {
   return {
@@ -324,6 +368,11 @@ for (const landId of fixedLandIds) {
   );
 
   for (const block of rotatedPair) {
+    assert.equal(
+      valueFor("zone", block.body),
+      expectedZoneByLandId.get(landId),
+      `${landId} must use its dedicated connection zone`,
+    );
     assert.equal(
       valueFor("land_percent", block.body),
       "100",
@@ -406,6 +455,57 @@ for (const terrain of ["HARBOR_DEEP", "PLAYER_DETAIL", "CENTRAL_DETAIL"]) {
   );
 }
 
+const connections = zoneConnectionBlocks(code);
+assert.ok(
+  !/\baccumulate_connections\b/.test(code),
+  "seam paths must be calculated independently from the original terrain",
+);
+const expectedConnectionPairs = [
+  ["NEAR_MAINLAND_ZONE", "NEAR_UPPER_BRIDGE_ZONE"],
+  ["NEAR_UPPER_BRIDGE_ZONE", "CENTRAL_ISLAND_ZONE"],
+  ["CENTRAL_ISLAND_ZONE", "FAR_UPPER_BRIDGE_ZONE"],
+  ["FAR_UPPER_BRIDGE_ZONE", "FAR_MAINLAND_ZONE"],
+  ["NEAR_MAINLAND_ZONE", "NEAR_MIDDLE_BRIDGE_ZONE"],
+  ["NEAR_MIDDLE_BRIDGE_ZONE", "CENTRAL_ISLAND_ZONE"],
+  ["CENTRAL_ISLAND_ZONE", "FAR_MIDDLE_BRIDGE_ZONE"],
+  ["FAR_MIDDLE_BRIDGE_ZONE", "FAR_MAINLAND_ZONE"],
+  ["NEAR_MAINLAND_ZONE", "NEAR_LOWER_BRIDGE_ZONE"],
+  ["NEAR_LOWER_BRIDGE_ZONE", "CENTRAL_ISLAND_ZONE"],
+  ["CENTRAL_ISLAND_ZONE", "FAR_LOWER_BRIDGE_ZONE"],
+  ["FAR_LOWER_BRIDGE_ZONE", "FAR_MAINLAND_ZONE"],
+].map(([from, to]) => `${from}->${to}`);
+assert.deepEqual(
+  connections.map(({ from, to }) => `${from}->${to}`),
+  expectedConnectionPairs,
+  "each of the three lanes needs four explicit seam connections",
+);
+
+for (const connection of connections) {
+  const label = `${connection.from}->${connection.to}`;
+  assert.match(
+    connection.body,
+    /\breplace_terrain\s+HARBOR_WATER\s+BRIDGE_GROUND\b/,
+    `${label} must fill normal harbor water with shallows`,
+  );
+  assert.match(
+    connection.body,
+    /\breplace_terrain\s+HARBOR_DEEP\s+BRIDGE_GROUND\b/,
+    `${label} must fill deep-water visual patches with shallows`,
+  );
+  assert.match(
+    connection.body,
+    /\bterrain_cost\s+HARBOR_WATER\s+12\b/,
+    `${label} must prefer the existing bridge and banks over open water`,
+  );
+  assert.match(connection.body, /\bterrain_cost\s+HARBOR_DEEP\s+14\b/);
+  assert.match(connection.body, /\bterrain_size\s+HARBOR_WATER\s+2\s+0\b/);
+  assert.match(connection.body, /\bterrain_size\s+HARBOR_DEEP\s+2\s+0\b/);
+  assert.ok(
+    !/\bdefault_terrain_replacement\b/.test(connection.body),
+    `${label} must not repaint mainland or island terrain`,
+  );
+}
+
 const objectBlocks = blocksFor("create_object", code);
 const playerObjects = objectBlocks.filter((block) =>
   /\bset_place_for_every_player\b/.test(block.body),
@@ -463,9 +563,19 @@ assert.equal(totalFor("START_HUNTABLE", playerObjects), 4, "each player needs 4 
 assert.equal(totalFor("FORAGE", playerObjects), 6, "each player needs 6 forage bushes");
 assert.equal(totalFor("GOLD", playerObjects), 15, "each player needs 7+4+4 home gold");
 assert.equal(totalFor("STONE", playerObjects), 9, "each player needs 5+4 home stone");
-assert.equal(totalFor("START_TREE", playerObjects), 90, "each player needs 90 guaranteed trees");
+assert.equal(totalFor("START_TREE", playerObjects), 180, "each player needs 180 guaranteed trees");
 assert.equal(totalFor("SHORE_FISH", playerObjects), 4, "each player needs 4 shore fish");
 assert.equal(totalFor("HARBOR_FISH", playerObjects), 6, "each player needs 6 deep fish");
+
+const homeWoodlines = playerObjects.filter(
+  (block) => block.name === "START_TREE" && valueFor("number_of_groups", block.body) === "1",
+);
+assert.equal(homeWoodlines.length, 3, "each player needs exactly three grouped home woodlines");
+for (const woodline of homeWoodlines) {
+  assert.equal(valueFor("number_of_objects", woodline.body), "58", "woodlines must be equal");
+  assert.equal(valueFor("group_placement_radius", woodline.body), "7");
+  assert.match(woodline.body, /\bforce_placement\b/, "home woodlines must be mandatory");
+}
 
 for (const fish of playerObjects.filter((block) =>
   ["SHORE_FISH", "HARBOR_FISH"].includes(block.name),
@@ -482,6 +592,14 @@ assert.equal(totalFor("STONE", centralObjects), 8, "the island needs two 4-tile 
 assert.equal(totalFor("RELIC", centralObjects), 5, "the island needs five relics");
 assert.equal(totalFor("START_TREE", centralObjects), 48, "the island needs four wood clusters");
 assert.equal(totalFor("CHURCH_RUIN", centralObjects), 2, "the island needs two church ruins");
+
+const centralRelics = centralObjects.find((block) => block.name === "RELIC");
+assert.match(centralRelics.body, /\bforce_placement\b/, "all five central relics must be mandatory");
+assert.equal(
+  valueFor("min_distance_group_placement", centralRelics.body),
+  "8",
+  "central relic spacing must fit reliably on the narrow island",
+);
 
 for (const block of playerObjects.filter((candidate) =>
   [
@@ -520,7 +638,7 @@ console.log(`PASS ${rmsPath}`);
 console.log(`  ${source.split("\n").length} lines, ${source.length} bytes`);
 console.log("  topology: 2 connected canals, 1 central island, 6 crossings");
 console.log("  quick start: 9 generic villagers, 2 houses, standard resource adjustment");
-console.log("  per player: 8 sheep, 2 boar, 4 deer, 15 gold, 9 stone, 90 trees");
+console.log("  per player: 8 sheep, 2 boar, 4 deer, 15 gold, 9 stone, 180 trees");
 console.log("  per player water: 4 shore fish, 6 deep fish");
 console.log("  neutral island: 12 gold, 8 stone, 5 relics, 48 trees, 2 church ruins");
 console.log("  integrity: no unit/building attribute changes or scripted income");

@@ -1,6 +1,6 @@
 /* Compatibility: Definitive Edition */
 /*
-    Speicherstadt v0.2.0
+    Speicherstadt v0.3.0
     The Garrison 2026 map competition release candidate.
 
     Designed for:
@@ -33,7 +33,6 @@
 #const HARBOR_WATER 23
 #const HARBOR_DEEP 22
 #const BRIDGE_GROUND 4
-#const ROAD_GROUND 24
 
 /* Object aliases. */
 #const START_HERDABLE 594
@@ -47,15 +46,23 @@
 #const NEAR_MAINLAND_ID 101
 #const FAR_MAINLAND_ID 102
 #const CENTRAL_ISLAND_ID 200
-#const UPPER_ROAD_ID 210
-#const MIDDLE_ROAD_ID 211
-#const LOWER_ROAD_ID 212
 #const NEAR_UPPER_BRIDGE_ID 301
 #const NEAR_MIDDLE_BRIDGE_ID 302
 #const NEAR_LOWER_BRIDGE_ID 303
 #const FAR_UPPER_BRIDGE_ID 304
 #const FAR_MIDDLE_BRIDGE_ID 305
 #const FAR_LOWER_BRIDGE_ID 306
+
+/* Unique zones let connection generation repair every bank seam directly. */
+#const NEAR_MAINLAND_ZONE 11
+#const FAR_MAINLAND_ZONE 12
+#const CENTRAL_ISLAND_ZONE 20
+#const NEAR_UPPER_BRIDGE_ZONE 31
+#const NEAR_MIDDLE_BRIDGE_ZONE 32
+#const NEAR_LOWER_BRIDGE_ZONE 33
+#const FAR_UPPER_BRIDGE_ZONE 34
+#const FAR_MIDDLE_BRIDGE_ZONE 35
+#const FAR_LOWER_BRIDGE_ZONE 36
 
 /* Actor areas used only for fair placement separation. */
 #const TC_AREA 1000
@@ -115,7 +122,7 @@ if VERTICAL_CANALS
         border_fuzziness 100
         clumping_factor 100
         other_zone_avoidance_distance 0
-        zone 1
+        zone NEAR_MAINLAND_ZONE
         land_id NEAR_MAINLAND_ID
         if PLAYER_ONE_NEAR_ORIGIN
             assign_to_player 1
@@ -137,7 +144,7 @@ if VERTICAL_CANALS
         border_fuzziness 100
         clumping_factor 100
         other_zone_avoidance_distance 0
-        zone 1
+        zone FAR_MAINLAND_ZONE
         land_id FAR_MAINLAND_ID
         if PLAYER_ONE_NEAR_ORIGIN
             assign_to_player 2
@@ -159,57 +166,8 @@ if VERTICAL_CANALS
         border_fuzziness 100
         clumping_factor 100
         other_zone_avoidance_distance 0
-        zone 2
+        zone CENTRAL_ISLAND_ZONE
         land_id CENTRAL_ISLAND_ID
-    }
-
-    /* Three road lanes across the warehouse island. */
-    create_land {
-        terrain_type ROAD_GROUND
-        land_percent 100
-        base_size 2
-        land_position 50 24
-        left_border 42
-        right_border 42
-        top_border 22
-        bottom_border 74
-        border_fuzziness 100
-        clumping_factor 100
-        other_zone_avoidance_distance 0
-        zone 2
-        land_id UPPER_ROAD_ID
-    }
-
-    create_land {
-        terrain_type ROAD_GROUND
-        land_percent 100
-        base_size 2
-        land_position 55 50
-        left_border 42
-        right_border 42
-        top_border 48
-        bottom_border 48
-        border_fuzziness 100
-        clumping_factor 100
-        other_zone_avoidance_distance 0
-        zone 2
-        land_id MIDDLE_ROAD_ID
-    }
-
-    create_land {
-        terrain_type ROAD_GROUND
-        land_percent 100
-        base_size 2
-        land_position 50 76
-        left_border 42
-        right_border 42
-        top_border 74
-        bottom_border 22
-        border_fuzziness 100
-        clumping_factor 100
-        other_zone_avoidance_distance 0
-        zone 2
-        land_id LOWER_ROAD_ID
     }
 
     /* Western canal crossings. Each overlaps both banks to prevent gaps. */
@@ -225,7 +183,7 @@ if VERTICAL_CANALS
         border_fuzziness 100
         clumping_factor 100
         other_zone_avoidance_distance 0
-        zone 3
+        zone NEAR_UPPER_BRIDGE_ZONE
         land_id NEAR_UPPER_BRIDGE_ID
     }
 
@@ -241,7 +199,7 @@ if VERTICAL_CANALS
         border_fuzziness 100
         clumping_factor 100
         other_zone_avoidance_distance 0
-        zone 3
+        zone NEAR_MIDDLE_BRIDGE_ZONE
         land_id NEAR_MIDDLE_BRIDGE_ID
     }
 
@@ -257,7 +215,7 @@ if VERTICAL_CANALS
         border_fuzziness 100
         clumping_factor 100
         other_zone_avoidance_distance 0
-        zone 3
+        zone NEAR_LOWER_BRIDGE_ZONE
         land_id NEAR_LOWER_BRIDGE_ID
     }
 
@@ -274,7 +232,7 @@ if VERTICAL_CANALS
         border_fuzziness 100
         clumping_factor 100
         other_zone_avoidance_distance 0
-        zone 3
+        zone FAR_UPPER_BRIDGE_ZONE
         land_id FAR_UPPER_BRIDGE_ID
     }
 
@@ -290,7 +248,7 @@ if VERTICAL_CANALS
         border_fuzziness 100
         clumping_factor 100
         other_zone_avoidance_distance 0
-        zone 3
+        zone FAR_MIDDLE_BRIDGE_ZONE
         land_id FAR_MIDDLE_BRIDGE_ID
     }
 
@@ -306,7 +264,7 @@ if VERTICAL_CANALS
         border_fuzziness 100
         clumping_factor 100
         other_zone_avoidance_distance 0
-        zone 3
+        zone FAR_LOWER_BRIDGE_ZONE
         land_id FAR_LOWER_BRIDGE_ID
     }
 
@@ -325,7 +283,7 @@ else
         border_fuzziness 100
         clumping_factor 100
         other_zone_avoidance_distance 0
-        zone 1
+        zone NEAR_MAINLAND_ZONE
         land_id NEAR_MAINLAND_ID
         if PLAYER_ONE_NEAR_ORIGIN
             assign_to_player 1
@@ -347,7 +305,7 @@ else
         border_fuzziness 100
         clumping_factor 100
         other_zone_avoidance_distance 0
-        zone 1
+        zone FAR_MAINLAND_ZONE
         land_id FAR_MAINLAND_ID
         if PLAYER_ONE_NEAR_ORIGIN
             assign_to_player 2
@@ -369,57 +327,8 @@ else
         border_fuzziness 100
         clumping_factor 100
         other_zone_avoidance_distance 0
-        zone 2
+        zone CENTRAL_ISLAND_ZONE
         land_id CENTRAL_ISLAND_ID
-    }
-
-    /* Three rotated road lanes. */
-    create_land {
-        terrain_type ROAD_GROUND
-        land_percent 100
-        base_size 2
-        land_position 24 50
-        left_border 22
-        right_border 74
-        top_border 42
-        bottom_border 42
-        border_fuzziness 100
-        clumping_factor 100
-        other_zone_avoidance_distance 0
-        zone 2
-        land_id UPPER_ROAD_ID
-    }
-
-    create_land {
-        terrain_type ROAD_GROUND
-        land_percent 100
-        base_size 2
-        land_position 50 55
-        left_border 48
-        right_border 48
-        top_border 42
-        bottom_border 42
-        border_fuzziness 100
-        clumping_factor 100
-        other_zone_avoidance_distance 0
-        zone 2
-        land_id MIDDLE_ROAD_ID
-    }
-
-    create_land {
-        terrain_type ROAD_GROUND
-        land_percent 100
-        base_size 2
-        land_position 76 50
-        left_border 74
-        right_border 22
-        top_border 42
-        bottom_border 42
-        border_fuzziness 100
-        clumping_factor 100
-        other_zone_avoidance_distance 0
-        zone 2
-        land_id LOWER_ROAD_ID
     }
 
     /* Northern canal crossings. */
@@ -435,7 +344,7 @@ else
         border_fuzziness 100
         clumping_factor 100
         other_zone_avoidance_distance 0
-        zone 3
+        zone NEAR_UPPER_BRIDGE_ZONE
         land_id NEAR_UPPER_BRIDGE_ID
     }
 
@@ -451,7 +360,7 @@ else
         border_fuzziness 100
         clumping_factor 100
         other_zone_avoidance_distance 0
-        zone 3
+        zone NEAR_MIDDLE_BRIDGE_ZONE
         land_id NEAR_MIDDLE_BRIDGE_ID
     }
 
@@ -467,7 +376,7 @@ else
         border_fuzziness 100
         clumping_factor 100
         other_zone_avoidance_distance 0
-        zone 3
+        zone NEAR_LOWER_BRIDGE_ZONE
         land_id NEAR_LOWER_BRIDGE_ID
     }
 
@@ -484,7 +393,7 @@ else
         border_fuzziness 100
         clumping_factor 100
         other_zone_avoidance_distance 0
-        zone 3
+        zone FAR_UPPER_BRIDGE_ZONE
         land_id FAR_UPPER_BRIDGE_ID
     }
 
@@ -500,7 +409,7 @@ else
         border_fuzziness 100
         clumping_factor 100
         other_zone_avoidance_distance 0
-        zone 3
+        zone FAR_MIDDLE_BRIDGE_ZONE
         land_id FAR_MIDDLE_BRIDGE_ID
     }
 
@@ -516,7 +425,7 @@ else
         border_fuzziness 100
         clumping_factor 100
         other_zone_avoidance_distance 0
-        zone 3
+        zone FAR_LOWER_BRIDGE_ZONE
         land_id FAR_LOWER_BRIDGE_ID
     }
 
@@ -557,7 +466,158 @@ create_terrain CENTRAL_DETAIL {
 
 <CONNECTION_GENERATION>
 
-/* The six crossings are explicit lands, so no stochastic connection is used. */
+/*
+    Each crossing has its own zone. These narrow passes replace only water at
+    the four joins in each lane, closing engine-generated seams without carving
+    extra routes through either mainland or the island.
+*/
+
+/* Upper lane. */
+create_connect_land_zones NEAR_MAINLAND_ZONE NEAR_UPPER_BRIDGE_ZONE {
+    replace_terrain HARBOR_WATER BRIDGE_GROUND
+    replace_terrain HARBOR_DEEP BRIDGE_GROUND
+    terrain_cost HARBOR_WATER 12
+    terrain_cost HARBOR_DEEP 14
+    terrain_cost BRIDGE_GROUND 1
+    terrain_cost PLAYER_GROUND 1
+    terrain_cost CENTRAL_GROUND 1
+    terrain_size HARBOR_WATER 2 0
+    terrain_size HARBOR_DEEP 2 0
+}
+
+create_connect_land_zones NEAR_UPPER_BRIDGE_ZONE CENTRAL_ISLAND_ZONE {
+    replace_terrain HARBOR_WATER BRIDGE_GROUND
+    replace_terrain HARBOR_DEEP BRIDGE_GROUND
+    terrain_cost HARBOR_WATER 12
+    terrain_cost HARBOR_DEEP 14
+    terrain_cost BRIDGE_GROUND 1
+    terrain_cost PLAYER_GROUND 1
+    terrain_cost CENTRAL_GROUND 1
+    terrain_size HARBOR_WATER 2 0
+    terrain_size HARBOR_DEEP 2 0
+}
+
+create_connect_land_zones CENTRAL_ISLAND_ZONE FAR_UPPER_BRIDGE_ZONE {
+    replace_terrain HARBOR_WATER BRIDGE_GROUND
+    replace_terrain HARBOR_DEEP BRIDGE_GROUND
+    terrain_cost HARBOR_WATER 12
+    terrain_cost HARBOR_DEEP 14
+    terrain_cost BRIDGE_GROUND 1
+    terrain_cost PLAYER_GROUND 1
+    terrain_cost CENTRAL_GROUND 1
+    terrain_size HARBOR_WATER 2 0
+    terrain_size HARBOR_DEEP 2 0
+}
+
+create_connect_land_zones FAR_UPPER_BRIDGE_ZONE FAR_MAINLAND_ZONE {
+    replace_terrain HARBOR_WATER BRIDGE_GROUND
+    replace_terrain HARBOR_DEEP BRIDGE_GROUND
+    terrain_cost HARBOR_WATER 12
+    terrain_cost HARBOR_DEEP 14
+    terrain_cost BRIDGE_GROUND 1
+    terrain_cost PLAYER_GROUND 1
+    terrain_cost CENTRAL_GROUND 1
+    terrain_size HARBOR_WATER 2 0
+    terrain_size HARBOR_DEEP 2 0
+}
+
+/* Middle lane. */
+create_connect_land_zones NEAR_MAINLAND_ZONE NEAR_MIDDLE_BRIDGE_ZONE {
+    replace_terrain HARBOR_WATER BRIDGE_GROUND
+    replace_terrain HARBOR_DEEP BRIDGE_GROUND
+    terrain_cost HARBOR_WATER 12
+    terrain_cost HARBOR_DEEP 14
+    terrain_cost BRIDGE_GROUND 1
+    terrain_cost PLAYER_GROUND 1
+    terrain_cost CENTRAL_GROUND 1
+    terrain_size HARBOR_WATER 2 0
+    terrain_size HARBOR_DEEP 2 0
+}
+
+create_connect_land_zones NEAR_MIDDLE_BRIDGE_ZONE CENTRAL_ISLAND_ZONE {
+    replace_terrain HARBOR_WATER BRIDGE_GROUND
+    replace_terrain HARBOR_DEEP BRIDGE_GROUND
+    terrain_cost HARBOR_WATER 12
+    terrain_cost HARBOR_DEEP 14
+    terrain_cost BRIDGE_GROUND 1
+    terrain_cost PLAYER_GROUND 1
+    terrain_cost CENTRAL_GROUND 1
+    terrain_size HARBOR_WATER 2 0
+    terrain_size HARBOR_DEEP 2 0
+}
+
+create_connect_land_zones CENTRAL_ISLAND_ZONE FAR_MIDDLE_BRIDGE_ZONE {
+    replace_terrain HARBOR_WATER BRIDGE_GROUND
+    replace_terrain HARBOR_DEEP BRIDGE_GROUND
+    terrain_cost HARBOR_WATER 12
+    terrain_cost HARBOR_DEEP 14
+    terrain_cost BRIDGE_GROUND 1
+    terrain_cost PLAYER_GROUND 1
+    terrain_cost CENTRAL_GROUND 1
+    terrain_size HARBOR_WATER 2 0
+    terrain_size HARBOR_DEEP 2 0
+}
+
+create_connect_land_zones FAR_MIDDLE_BRIDGE_ZONE FAR_MAINLAND_ZONE {
+    replace_terrain HARBOR_WATER BRIDGE_GROUND
+    replace_terrain HARBOR_DEEP BRIDGE_GROUND
+    terrain_cost HARBOR_WATER 12
+    terrain_cost HARBOR_DEEP 14
+    terrain_cost BRIDGE_GROUND 1
+    terrain_cost PLAYER_GROUND 1
+    terrain_cost CENTRAL_GROUND 1
+    terrain_size HARBOR_WATER 2 0
+    terrain_size HARBOR_DEEP 2 0
+}
+
+/* Lower lane. */
+create_connect_land_zones NEAR_MAINLAND_ZONE NEAR_LOWER_BRIDGE_ZONE {
+    replace_terrain HARBOR_WATER BRIDGE_GROUND
+    replace_terrain HARBOR_DEEP BRIDGE_GROUND
+    terrain_cost HARBOR_WATER 12
+    terrain_cost HARBOR_DEEP 14
+    terrain_cost BRIDGE_GROUND 1
+    terrain_cost PLAYER_GROUND 1
+    terrain_cost CENTRAL_GROUND 1
+    terrain_size HARBOR_WATER 2 0
+    terrain_size HARBOR_DEEP 2 0
+}
+
+create_connect_land_zones NEAR_LOWER_BRIDGE_ZONE CENTRAL_ISLAND_ZONE {
+    replace_terrain HARBOR_WATER BRIDGE_GROUND
+    replace_terrain HARBOR_DEEP BRIDGE_GROUND
+    terrain_cost HARBOR_WATER 12
+    terrain_cost HARBOR_DEEP 14
+    terrain_cost BRIDGE_GROUND 1
+    terrain_cost PLAYER_GROUND 1
+    terrain_cost CENTRAL_GROUND 1
+    terrain_size HARBOR_WATER 2 0
+    terrain_size HARBOR_DEEP 2 0
+}
+
+create_connect_land_zones CENTRAL_ISLAND_ZONE FAR_LOWER_BRIDGE_ZONE {
+    replace_terrain HARBOR_WATER BRIDGE_GROUND
+    replace_terrain HARBOR_DEEP BRIDGE_GROUND
+    terrain_cost HARBOR_WATER 12
+    terrain_cost HARBOR_DEEP 14
+    terrain_cost BRIDGE_GROUND 1
+    terrain_cost PLAYER_GROUND 1
+    terrain_cost CENTRAL_GROUND 1
+    terrain_size HARBOR_WATER 2 0
+    terrain_size HARBOR_DEEP 2 0
+}
+
+create_connect_land_zones FAR_LOWER_BRIDGE_ZONE FAR_MAINLAND_ZONE {
+    replace_terrain HARBOR_WATER BRIDGE_GROUND
+    replace_terrain HARBOR_DEEP BRIDGE_GROUND
+    terrain_cost HARBOR_WATER 12
+    terrain_cost HARBOR_DEEP 14
+    terrain_cost BRIDGE_GROUND 1
+    terrain_cost PLAYER_GROUND 1
+    terrain_cost CENTRAL_GROUND 1
+    terrain_size HARBOR_WATER 2 0
+    terrain_size HARBOR_DEEP 2 0
+}
 
 
 <OBJECTS_GENERATION>
@@ -845,9 +905,9 @@ create_object START_TREE {
 
 /* Three equal but differently exposed home woodlines. */
 create_object START_TREE {
-    number_of_objects 32
+    number_of_objects 58
     number_of_groups 1
-    group_placement_radius 6
+    group_placement_radius 7
     set_tight_grouping
     set_gaia_object_only
     set_place_for_every_player
@@ -863,13 +923,13 @@ create_object START_TREE {
     avoid_actor_area PRIMARY_GOLD_AREA
     avoid_actor_area PRIMARY_STONE_AREA
     actor_area SAFE_WOOD_AREA
-    actor_area_radius 8
+    actor_area_radius 10
 }
 
 create_object START_TREE {
-    number_of_objects 28
+    number_of_objects 58
     number_of_groups 1
-    group_placement_radius 6
+    group_placement_radius 7
     set_tight_grouping
     set_gaia_object_only
     set_place_for_every_player
@@ -889,13 +949,13 @@ create_object START_TREE {
     avoid_actor_area FORWARD_STONE_AREA
     avoid_actor_area SAFE_WOOD_AREA
     actor_area FORWARD_WOOD_AREA
-    actor_area_radius 8
+    actor_area_radius 10
 }
 
 create_object START_TREE {
-    number_of_objects 24
+    number_of_objects 58
     number_of_groups 1
-    group_placement_radius 5
+    group_placement_radius 7
     set_tight_grouping
     set_gaia_object_only
     set_place_for_every_player
@@ -973,7 +1033,8 @@ create_object RELIC {
     set_gaia_object_only
     place_on_specific_land_id CENTRAL_ISLAND_ID
     avoid_other_land_zones 2
-    min_distance_group_placement 12
+    min_distance_group_placement 8
+    force_placement
 }
 
 create_object START_TREE {

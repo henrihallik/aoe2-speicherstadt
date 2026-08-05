@@ -1,17 +1,18 @@
 # Static Validation Report
 
-Candidate: Speicherstadt v0.2.0
+Candidate: Speicherstadt v0.3.0
 Checked: 2026-08-05
-RMS SHA-256: `baf4c096191534e5794dc079d9442c8ec2d6800fc16aaf7f6895eeba915f8a78`
+RMS SHA-256: `c6a1acb459fdafc0f9a377fd5ef4be1211309e8d5f9dcb794727bae9a1d32841`
 
 ## Map-Specific Validator
 
 `node tools/validate-rms.mjs` passes. It checks the section and control
 structure, exact transposed geometry, six crossing rectangles, non-overlapping
 land-origin squares, `border_fuzziness 100` on every constrained land, flat
-elevation, explicit 9-villager start, object/resource totals, actor-area
-references, land confinement, neutral ownership, mandatory placement, and the
-competition's prohibited mechanics.
+elevation, twelve dedicated zone-to-zone seam connections, explicit 9-villager
+start, three equal 58-tree home woodlines, mandatory five-relic placement,
+object/resource totals, actor-area references, land confinement, neutral
+ownership, and the competition's prohibited mechanics.
 
 ## Current RMS Grammar
 
@@ -36,16 +37,18 @@ used by current tournament maps, including `behavior_version`,
 distance parameter on `set_avoid_player_start_areas`, and reports custom numeric
 constants as the wrong argument type instead of resolving them.
 
-A parse-only run was still completed after excluding its unrelated legacy
-formatter from a temporary build. Its 57 diagnostics all correspond to those
-known table gaps and their arguments; it found no brace, section, conditional,
-or random-block nesting error.
+A parse-only comparison was completed during development after excluding its
+unrelated legacy formatter from a temporary build. Its diagnostics corresponded
+to those known table gaps and their arguments; it found no brace, section,
+conditional, or random-block nesting error.
 
 ## Runtime Status
 
-Version 0.1.0 loaded and ran, but its first smoke test failed the intended
-topology: `border_fuzziness 0` causes AoE2 land growth to ignore borders, so
-shallow crossing terrain spread through the canals and disrupted resource
-placement. Version 0.2.0 changes every constrained land to the fully respected
-value of `100` and adds a static regression check. Its in-game retest, full
-seed matrix, and match checks remain pending in `runtime-test-checklist.md`.
+Version 0.1.0 loaded but failed the intended topology because
+`border_fuzziness 0` made constrained lands ignore their borders. Version 0.2.0
+restored the recognizable two-canal layout, but screenshots exposed water seams
+between crossings and banks, only 90 home trees, and four placed relics instead
+of five. Version 0.3.0 removes detached decorative road lands, gives every
+crossing a dedicated zone and four explicit seam connections, raises home wood
+to 180 trees, and makes five relics mandatory with reduced spacing. Its in-game
+retest, full seed matrix, and match checks remain pending.

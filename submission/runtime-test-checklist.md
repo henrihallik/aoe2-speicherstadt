@@ -4,9 +4,9 @@ Static parsers cannot prove that AoE2 DE will generate, place, and path every
 object correctly. Complete this checklist in the same current game build that
 will be used for the submission.
 
-Test v0.2.0 or newer. Version 0.1.0 loaded successfully but failed topology:
-its lands ignored their intended rectangles and shallow terrain spread through
-the canals.
+Test v0.3.0 or newer. Version 0.1.0 failed its large-scale topology. Version
+0.2.0 restored the intended layout, but screenshot testing found water seams at
+the crossing banks, insufficient home wood, and only four of five relics.
 
 ## Required Lobby
 
@@ -46,13 +46,16 @@ color assignments.
 - Both players have a Town Center, 9 generic villagers, 2 houses, and 1 scout.
 - Both players have 8 sheep, 2 boar, 4 deer, 6 berries, 15 home gold, and 9
   home stone.
+- Each player has three 58-tree home woodlines and six TC stragglers, for 180
+  home trees total.
 - Each home canal has 4 shore fish and 6 deep fish.
-- The island has 12 gold, 8 stone, 5 relics, four wood clusters, and two church
-  ruins.
+- The island has 12 gold, 8 stone, exactly 5 visible relics, four wood clusters,
+  and two church ruins.
 - No resource is trapped in water, inside a building, or beyond the map edge.
 - The minimap matches the two-mainland, two-canal, central-island layout.
 - Land units cannot enter canal water except at the six shallow crossings.
-- All six shallow crossings connect cleanly to both banks.
+- All six shallow crossings connect cleanly to both banks, with no intervening
+  deep-water tile at any of the twelve joins.
 - A land unit can cross through all three complete lanes.
 - A ship can traverse both canals and rotate around both ends of the island.
 - Docks can be built on both mainland canal shores.
