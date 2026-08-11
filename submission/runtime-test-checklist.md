@@ -4,7 +4,7 @@ Static parsers cannot prove that AoE2 DE will generate, place, and path every
 object correctly. Complete this checklist in the same current game build that
 will be used for the submission.
 
-Test v0.6.0 or newer. Version 0.1.0 failed its large-scale topology. Version
+Test v0.7.0 or newer. Version 0.1.0 failed its large-scale topology. Version
 0.2.0 restored the intended layout, but screenshot testing found water seams at
 the crossing banks, insufficient home wood, and only four of five relics.
 Version 0.3.0 repaired the joins and relic placement constraints, but still
@@ -52,8 +52,9 @@ color assignments.
   home trees total.
 - Each player side has two fixed corner forests, and additional forest clumps
   are distributed through the outer mainland. No map corner is barren.
-- Each player side has exactly 8 shore fish and 12 deep fish, spread across five
-  distinct reserved canal parcels rather than clustered in one location.
+- Each player side has exactly 16 shore fish and 16 deep fish, spread across
+  eight distinct reserved canal parcels. With a fish-range indicator enabled,
+  no two fish resource tiles overlap.
 - The island has four guaranteed 3-tile golds, two guaranteed 4-tile stones,
   exactly 5 visible relics, four wood clusters, and two church ruins.
 - The complete two-player map has 42 gold tiles and 26 stone tiles.

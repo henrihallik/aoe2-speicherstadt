@@ -197,12 +197,18 @@ for (const [name, value] of [
   ["NEAR_SHORE_B_ID", 402],
   ["FAR_SHORE_A_ID", 403],
   ["FAR_SHORE_B_ID", 404],
+  ["NEAR_SHORE_C_ID", 405],
+  ["NEAR_SHORE_D_ID", 406],
+  ["FAR_SHORE_C_ID", 407],
+  ["FAR_SHORE_D_ID", 408],
   ["NEAR_DEEP_A_ID", 411],
   ["NEAR_DEEP_B_ID", 412],
   ["NEAR_DEEP_C_ID", 413],
   ["FAR_DEEP_A_ID", 414],
   ["FAR_DEEP_B_ID", 415],
   ["FAR_DEEP_C_ID", 416],
+  ["NEAR_DEEP_D_ID", 417],
+  ["FAR_DEEP_D_ID", 418],
   ["CENTRAL_GOLD_A_ID", 501],
   ["CENTRAL_GOLD_B_ID", 502],
   ["CENTRAL_GOLD_C_ID", 503],
@@ -264,8 +270,8 @@ assert.equal(landsByTerrain("BRIDGE_GROUND").length, 12, "six bridges per rotati
 assert.equal(landsByTerrain("OAK_FOREST").length, 4, "all four map corners need fixed forests");
 assert.equal(
   landsByTerrain("HARBOR_WATER").length,
-  20,
-  "five fixed fish parcels per canal are required in both rotations",
+  32,
+  "eight fixed fish parcels per canal are required in both rotations",
 );
 assert.ok(!/\bHARBOR_DEEP\b/.test(code), "all harbor water must use dockable terrain ID 1");
 assert.ok(!/\bROAD_GROUND\b/.test(code), "detached decorative road lands must not return");
@@ -394,12 +400,18 @@ const fixedLandIds = [
   "NEAR_SHORE_B_ID",
   "FAR_SHORE_A_ID",
   "FAR_SHORE_B_ID",
+  "NEAR_SHORE_C_ID",
+  "NEAR_SHORE_D_ID",
+  "FAR_SHORE_C_ID",
+  "FAR_SHORE_D_ID",
   "NEAR_DEEP_A_ID",
   "NEAR_DEEP_B_ID",
   "NEAR_DEEP_C_ID",
   "FAR_DEEP_A_ID",
   "FAR_DEEP_B_ID",
   "FAR_DEEP_C_ID",
+  "NEAR_DEEP_D_ID",
+  "FAR_DEEP_D_ID",
   "CENTRAL_GOLD_A_ID",
   "CENTRAL_GOLD_B_ID",
   "CENTRAL_GOLD_C_ID",
@@ -407,6 +419,10 @@ const fixedLandIds = [
   "CENTRAL_STONE_A_ID",
   "CENTRAL_STONE_B_ID",
 ];
+
+const fishLandIds = fixedLandIds.filter((landId) =>
+  /_(?:SHORE|DEEP)_/.test(landId),
+);
 
 const expectedZoneByLandId = new Map([
   ["NEAR_MAINLAND_ID", "NEAR_MAINLAND_ZONE"],
@@ -422,12 +438,18 @@ const expectedZoneByLandId = new Map([
   ["NEAR_SHORE_B_ID", "WATER_RESOURCE_ZONE"],
   ["FAR_SHORE_A_ID", "WATER_RESOURCE_ZONE"],
   ["FAR_SHORE_B_ID", "WATER_RESOURCE_ZONE"],
+  ["NEAR_SHORE_C_ID", "WATER_RESOURCE_ZONE"],
+  ["NEAR_SHORE_D_ID", "WATER_RESOURCE_ZONE"],
+  ["FAR_SHORE_C_ID", "WATER_RESOURCE_ZONE"],
+  ["FAR_SHORE_D_ID", "WATER_RESOURCE_ZONE"],
   ["NEAR_DEEP_A_ID", "WATER_RESOURCE_ZONE"],
   ["NEAR_DEEP_B_ID", "WATER_RESOURCE_ZONE"],
   ["NEAR_DEEP_C_ID", "WATER_RESOURCE_ZONE"],
   ["FAR_DEEP_A_ID", "WATER_RESOURCE_ZONE"],
   ["FAR_DEEP_B_ID", "WATER_RESOURCE_ZONE"],
   ["FAR_DEEP_C_ID", "WATER_RESOURCE_ZONE"],
+  ["NEAR_DEEP_D_ID", "WATER_RESOURCE_ZONE"],
+  ["FAR_DEEP_D_ID", "WATER_RESOURCE_ZONE"],
   ["CENTRAL_GOLD_A_ID", "CENTRAL_RESOURCE_ZONE"],
   ["CENTRAL_GOLD_B_ID", "CENTRAL_RESOURCE_ZONE"],
   ["CENTRAL_GOLD_C_ID", "CENTRAL_RESOURCE_ZONE"],
@@ -478,6 +500,44 @@ for (const landId of fixedLandIds) {
         "100",
         `${landId} must fully fill its constrained rectangle`,
       );
+    }
+  }
+}
+
+function landRectangle(block) {
+  const [left, right, top, bottom] = [
+    "left_border",
+    "right_border",
+    "top_border",
+    "bottom_border",
+  ].map((attribute) => Number(valueFor(attribute, block.body)));
+  return {
+    id: valueFor("land_id", block.body),
+    minX: left,
+    maxX: 100 - right,
+    minY: top,
+    maxY: 100 - bottom,
+  };
+}
+
+for (const orientationIndex of [0, 1]) {
+  const parcels = fishLandIds.map((landId) => {
+    const pair = landBlocks.filter(
+      (block) => valueFor("land_id", block.body) === landId,
+    );
+    return landRectangle(pair[orientationIndex]);
+  });
+
+  for (let firstIndex = 0; firstIndex < parcels.length; firstIndex += 1) {
+    for (let secondIndex = firstIndex + 1; secondIndex < parcels.length; secondIndex += 1) {
+      const first = parcels[firstIndex];
+      const second = parcels[secondIndex];
+      const overlap =
+        first.minX <= second.maxX &&
+        second.minX <= first.maxX &&
+        first.minY <= second.maxY &&
+        second.minY <= first.maxY;
+      assert.ok(!overlap, `${first.id} and ${second.id} have overlapping fish parcels`);
     }
   }
 }
@@ -698,21 +758,27 @@ assert.equal(totalFor("HARBOR_FISH", playerObjects), 0, "fish must use fixed neu
 const fixedFishExpectations = new Map([
   ["NEAR_SHORE_A_ID", "SHORE_FISH"],
   ["NEAR_SHORE_B_ID", "SHORE_FISH"],
+  ["NEAR_SHORE_C_ID", "SHORE_FISH"],
+  ["NEAR_SHORE_D_ID", "SHORE_FISH"],
   ["FAR_SHORE_A_ID", "SHORE_FISH"],
   ["FAR_SHORE_B_ID", "SHORE_FISH"],
+  ["FAR_SHORE_C_ID", "SHORE_FISH"],
+  ["FAR_SHORE_D_ID", "SHORE_FISH"],
   ["NEAR_DEEP_A_ID", "HARBOR_FISH"],
   ["NEAR_DEEP_B_ID", "HARBOR_FISH"],
   ["NEAR_DEEP_C_ID", "HARBOR_FISH"],
+  ["NEAR_DEEP_D_ID", "HARBOR_FISH"],
   ["FAR_DEEP_A_ID", "HARBOR_FISH"],
   ["FAR_DEEP_B_ID", "HARBOR_FISH"],
   ["FAR_DEEP_C_ID", "HARBOR_FISH"],
+  ["FAR_DEEP_D_ID", "HARBOR_FISH"],
 ]);
 const allFish = objectBlocks.filter((block) =>
   ["SHORE_FISH", "HARBOR_FISH"].includes(block.name),
 );
 assert.equal(allFish.length, fixedFishExpectations.size, "every fish parcel needs one object block");
-assert.equal(totalFor("SHORE_FISH", allFish), 16, "four shore parcels must hold four fish each");
-assert.equal(totalFor("HARBOR_FISH", allFish), 24, "six deep parcels must hold four fish each");
+assert.equal(totalFor("SHORE_FISH", allFish), 32, "eight shore parcels must hold four fish each");
+assert.equal(totalFor("HARBOR_FISH", allFish), 32, "eight deep parcels must hold four fish each");
 
 for (const [landId, fishType] of fixedFishExpectations) {
   const matching = allFish.filter(
@@ -722,12 +788,17 @@ for (const [landId, fishType] of fixedFishExpectations) {
   const fish = matching[0];
   assert.equal(fish.name, fishType, `${landId} has the wrong fish type`);
   assert.equal(objectQuantity(fish), 4, `${landId} must contain exactly four fish`);
-  assert.equal(valueFor("number_of_objects", fish.body), "2");
-  assert.equal(valueFor("number_of_groups", fish.body), "2");
+  assert.equal(
+    valueFor("number_of_objects", fish.body),
+    "1",
+    `${landId} must use singleton groups so fish cannot overlap within a group`,
+  );
+  assert.equal(valueFor("number_of_groups", fish.body), "4");
   assert.equal(valueFor("group_placement_radius", fish.body), "1");
   assert.equal(valueFor("avoid_other_land_zones", fish.body), "0");
   assert.equal(valueFor("terrain_to_place_on", fish.body), "HARBOR_WATER");
-  assert.equal(valueFor("temp_min_distance_group_placement", fish.body), "4");
+  assert.equal(valueFor("min_distance_group_placement", fish.body), "2");
+  assert.equal(valueFor("temp_min_distance_group_placement", fish.body), "3");
   assert.match(fish.body, /\bset_gaia_object_only\b/);
   assert.match(fish.body, /\bfind_closest\b/);
   assert.match(fish.body, /\bforce_placement\b/);
@@ -843,6 +914,6 @@ console.log("  quick start: 9 generic villagers, 2 houses, standard resource adj
 console.log("  per player: 8 sheep, 2 boar, 4 deer, 15 gold, 9 stone, 180 home trees");
 console.log("  mainland wood: 4 fixed 90-tile corner forests + 7% distributed forest terrain");
 console.log("  dockable canals: terrain ID 1 throughout");
-console.log("  fixed canal water: 8 shore fish and 12 deep fish per side across 5 slots");
+console.log("  fixed canal water: 16 shore fish and 16 deep fish per side across 8 slots");
 console.log("  neutral island: 12 fixed gold, 8 fixed stone, 5 relics, 48 trees, 2 church ruins");
 console.log("  integrity: no unit/building attribute changes or scripted income");

@@ -1,6 +1,6 @@
 /* Compatibility: Definitive Edition */
 /*
-    Speicherstadt v0.6.0
+    Speicherstadt v0.7.0
     The Garrison 2026 map competition release candidate.
 
     Designed for:
@@ -56,12 +56,18 @@
 #const NEAR_SHORE_B_ID 402
 #const FAR_SHORE_A_ID 403
 #const FAR_SHORE_B_ID 404
+#const NEAR_SHORE_C_ID 405
+#const NEAR_SHORE_D_ID 406
+#const FAR_SHORE_C_ID 407
+#const FAR_SHORE_D_ID 408
 #const NEAR_DEEP_A_ID 411
 #const NEAR_DEEP_B_ID 412
 #const NEAR_DEEP_C_ID 413
 #const FAR_DEEP_A_ID 414
 #const FAR_DEEP_B_ID 415
 #const FAR_DEEP_C_ID 416
+#const NEAR_DEEP_D_ID 417
+#const FAR_DEEP_D_ID 418
 #const CENTRAL_GOLD_A_ID 501
 #const CENTRAL_GOLD_B_ID 502
 #const CENTRAL_GOLD_C_ID 503
@@ -452,7 +458,7 @@ endif
 
 /*
     Fixed water lands replace fallible player-relative fish searches. Each
-    canal side receives two shore-fish parcels and three deep-fish parcels,
+    canal side receives four shore-fish parcels and four deep-fish parcels,
     all placed between crossing bands and transposed with the complete layout.
 */
 if VERTICAL_CANALS
@@ -477,11 +483,11 @@ if VERTICAL_CANALS
         terrain_type HARBOR_WATER
         land_percent 100
         base_size 1
-        land_position 39 87
+        land_position 39 85
         left_border 36
         right_border 58
-        top_border 83
-        bottom_border 9
+        top_border 80
+        bottom_border 11
         border_fuzziness 100
         clumping_factor 100
         other_zone_avoidance_distance 0
@@ -509,16 +515,80 @@ if VERTICAL_CANALS
         terrain_type HARBOR_WATER
         land_percent 100
         base_size 1
-        land_position 61 87
+        land_position 61 85
         left_border 58
         right_border 36
-        top_border 83
-        bottom_border 9
+        top_border 80
+        bottom_border 11
         border_fuzziness 100
         clumping_factor 100
         other_zone_avoidance_distance 0
         zone WATER_RESOURCE_ZONE
         land_id FAR_SHORE_B_ID
+    }
+
+    create_land {
+        terrain_type HARBOR_WATER
+        land_percent 100
+        base_size 1
+        land_position 39 31
+        left_border 36
+        right_border 58
+        top_border 28
+        bottom_border 66
+        border_fuzziness 100
+        clumping_factor 100
+        other_zone_avoidance_distance 0
+        zone WATER_RESOURCE_ZONE
+        land_id NEAR_SHORE_C_ID
+    }
+
+    create_land {
+        terrain_type HARBOR_WATER
+        land_percent 100
+        base_size 1
+        land_position 39 69
+        left_border 36
+        right_border 58
+        top_border 66
+        bottom_border 28
+        border_fuzziness 100
+        clumping_factor 100
+        other_zone_avoidance_distance 0
+        zone WATER_RESOURCE_ZONE
+        land_id NEAR_SHORE_D_ID
+    }
+
+    create_land {
+        terrain_type HARBOR_WATER
+        land_percent 100
+        base_size 1
+        land_position 61 31
+        left_border 58
+        right_border 36
+        top_border 28
+        bottom_border 66
+        border_fuzziness 100
+        clumping_factor 100
+        other_zone_avoidance_distance 0
+        zone WATER_RESOURCE_ZONE
+        land_id FAR_SHORE_C_ID
+    }
+
+    create_land {
+        terrain_type HARBOR_WATER
+        land_percent 100
+        base_size 1
+        land_position 61 69
+        left_border 58
+        right_border 36
+        top_border 66
+        bottom_border 28
+        border_fuzziness 100
+        clumping_factor 100
+        other_zone_avoidance_distance 0
+        zone WATER_RESOURCE_ZONE
+        land_id FAR_SHORE_D_ID
     }
 
     create_land {
@@ -541,11 +611,11 @@ if VERTICAL_CANALS
         terrain_type HARBOR_WATER
         land_percent 100
         base_size 1
-        land_position 39 37
+        land_position 39 43
         left_border 36
         right_border 58
-        top_border 33
-        bottom_border 59
+        top_border 39
+        bottom_border 54
         border_fuzziness 100
         clumping_factor 100
         other_zone_avoidance_distance 0
@@ -557,11 +627,11 @@ if VERTICAL_CANALS
         terrain_type HARBOR_WATER
         land_percent 100
         base_size 1
-        land_position 39 63
+        land_position 39 57
         left_border 36
         right_border 58
-        top_border 59
-        bottom_border 33
+        top_border 54
+        bottom_border 39
         border_fuzziness 100
         clumping_factor 100
         other_zone_avoidance_distance 0
@@ -589,11 +659,11 @@ if VERTICAL_CANALS
         terrain_type HARBOR_WATER
         land_percent 100
         base_size 1
-        land_position 61 37
+        land_position 61 43
         left_border 58
         right_border 36
-        top_border 33
-        bottom_border 59
+        top_border 39
+        bottom_border 54
         border_fuzziness 100
         clumping_factor 100
         other_zone_avoidance_distance 0
@@ -605,16 +675,48 @@ if VERTICAL_CANALS
         terrain_type HARBOR_WATER
         land_percent 100
         base_size 1
-        land_position 61 63
+        land_position 61 57
         left_border 58
         right_border 36
-        top_border 59
-        bottom_border 33
+        top_border 54
+        bottom_border 39
         border_fuzziness 100
         clumping_factor 100
         other_zone_avoidance_distance 0
         zone WATER_RESOURCE_ZONE
         land_id FAR_DEEP_C_ID
+    }
+
+    create_land {
+        terrain_type HARBOR_WATER
+        land_percent 100
+        base_size 1
+        land_position 39 95
+        left_border 36
+        right_border 58
+        top_border 92
+        bottom_border 2
+        border_fuzziness 100
+        clumping_factor 100
+        other_zone_avoidance_distance 0
+        zone WATER_RESOURCE_ZONE
+        land_id NEAR_DEEP_D_ID
+    }
+
+    create_land {
+        terrain_type HARBOR_WATER
+        land_percent 100
+        base_size 1
+        land_position 61 95
+        left_border 58
+        right_border 36
+        top_border 92
+        bottom_border 2
+        border_fuzziness 100
+        clumping_factor 100
+        other_zone_avoidance_distance 0
+        zone WATER_RESOURCE_ZONE
+        land_id FAR_DEEP_D_ID
     }
 
 else
@@ -639,9 +741,9 @@ else
         terrain_type HARBOR_WATER
         land_percent 100
         base_size 1
-        land_position 87 39
-        left_border 83
-        right_border 9
+        land_position 85 39
+        left_border 80
+        right_border 11
         top_border 36
         bottom_border 58
         border_fuzziness 100
@@ -671,9 +773,9 @@ else
         terrain_type HARBOR_WATER
         land_percent 100
         base_size 1
-        land_position 87 61
-        left_border 83
-        right_border 9
+        land_position 85 61
+        left_border 80
+        right_border 11
         top_border 58
         bottom_border 36
         border_fuzziness 100
@@ -681,6 +783,70 @@ else
         other_zone_avoidance_distance 0
         zone WATER_RESOURCE_ZONE
         land_id FAR_SHORE_B_ID
+    }
+
+    create_land {
+        terrain_type HARBOR_WATER
+        land_percent 100
+        base_size 1
+        land_position 31 39
+        left_border 28
+        right_border 66
+        top_border 36
+        bottom_border 58
+        border_fuzziness 100
+        clumping_factor 100
+        other_zone_avoidance_distance 0
+        zone WATER_RESOURCE_ZONE
+        land_id NEAR_SHORE_C_ID
+    }
+
+    create_land {
+        terrain_type HARBOR_WATER
+        land_percent 100
+        base_size 1
+        land_position 69 39
+        left_border 66
+        right_border 28
+        top_border 36
+        bottom_border 58
+        border_fuzziness 100
+        clumping_factor 100
+        other_zone_avoidance_distance 0
+        zone WATER_RESOURCE_ZONE
+        land_id NEAR_SHORE_D_ID
+    }
+
+    create_land {
+        terrain_type HARBOR_WATER
+        land_percent 100
+        base_size 1
+        land_position 31 61
+        left_border 28
+        right_border 66
+        top_border 58
+        bottom_border 36
+        border_fuzziness 100
+        clumping_factor 100
+        other_zone_avoidance_distance 0
+        zone WATER_RESOURCE_ZONE
+        land_id FAR_SHORE_C_ID
+    }
+
+    create_land {
+        terrain_type HARBOR_WATER
+        land_percent 100
+        base_size 1
+        land_position 69 61
+        left_border 66
+        right_border 28
+        top_border 58
+        bottom_border 36
+        border_fuzziness 100
+        clumping_factor 100
+        other_zone_avoidance_distance 0
+        zone WATER_RESOURCE_ZONE
+        land_id FAR_SHORE_D_ID
     }
 
     create_land {
@@ -703,9 +869,9 @@ else
         terrain_type HARBOR_WATER
         land_percent 100
         base_size 1
-        land_position 37 39
-        left_border 33
-        right_border 59
+        land_position 43 39
+        left_border 39
+        right_border 54
         top_border 36
         bottom_border 58
         border_fuzziness 100
@@ -719,9 +885,9 @@ else
         terrain_type HARBOR_WATER
         land_percent 100
         base_size 1
-        land_position 63 39
-        left_border 59
-        right_border 33
+        land_position 57 39
+        left_border 54
+        right_border 39
         top_border 36
         bottom_border 58
         border_fuzziness 100
@@ -751,9 +917,9 @@ else
         terrain_type HARBOR_WATER
         land_percent 100
         base_size 1
-        land_position 37 61
-        left_border 33
-        right_border 59
+        land_position 43 61
+        left_border 39
+        right_border 54
         top_border 58
         bottom_border 36
         border_fuzziness 100
@@ -767,9 +933,9 @@ else
         terrain_type HARBOR_WATER
         land_percent 100
         base_size 1
-        land_position 63 61
-        left_border 59
-        right_border 33
+        land_position 57 61
+        left_border 54
+        right_border 39
         top_border 58
         bottom_border 36
         border_fuzziness 100
@@ -777,6 +943,38 @@ else
         other_zone_avoidance_distance 0
         zone WATER_RESOURCE_ZONE
         land_id FAR_DEEP_C_ID
+    }
+
+    create_land {
+        terrain_type HARBOR_WATER
+        land_percent 100
+        base_size 1
+        land_position 95 39
+        left_border 92
+        right_border 2
+        top_border 36
+        bottom_border 58
+        border_fuzziness 100
+        clumping_factor 100
+        other_zone_avoidance_distance 0
+        zone WATER_RESOURCE_ZONE
+        land_id NEAR_DEEP_D_ID
+    }
+
+    create_land {
+        terrain_type HARBOR_WATER
+        land_percent 100
+        base_size 1
+        land_position 95 61
+        left_border 92
+        right_border 2
+        top_border 58
+        bottom_border 36
+        border_fuzziness 100
+        clumping_factor 100
+        other_zone_avoidance_distance 0
+        zone WATER_RESOURCE_ZONE
+        land_id FAR_DEEP_D_ID
     }
 
 endif
@@ -1564,13 +1762,13 @@ create_object START_TREE {
 }
 
 /*
-    Fixed mirrored shoals guarantee twenty fish on each player's canal side.
-    Each declaration owns a reserved water parcel containing two compact
-    pairs, so forests and bridges cannot collapse the fish into one location.
+    Fixed mirrored shoals guarantee 32 fish on each player's canal side.
+    Every parcel receives four singleton groups with explicit separation, so
+    fish remain individually readable instead of stacking on adjacent tiles.
 */
 create_object SHORE_FISH {
-    number_of_objects 2
-    number_of_groups 2
+    number_of_objects 1
+    number_of_groups 4
     group_placement_radius 1
     set_loose_grouping
     set_gaia_object_only
@@ -1579,12 +1777,13 @@ create_object SHORE_FISH {
     find_closest
     force_placement
     terrain_to_place_on HARBOR_WATER
-    temp_min_distance_group_placement 4
+    min_distance_group_placement 2
+    temp_min_distance_group_placement 3
 }
 
 create_object SHORE_FISH {
-    number_of_objects 2
-    number_of_groups 2
+    number_of_objects 1
+    number_of_groups 4
     group_placement_radius 1
     set_loose_grouping
     set_gaia_object_only
@@ -1593,12 +1792,43 @@ create_object SHORE_FISH {
     find_closest
     force_placement
     terrain_to_place_on HARBOR_WATER
-    temp_min_distance_group_placement 4
+    min_distance_group_placement 2
+    temp_min_distance_group_placement 3
 }
 
 create_object SHORE_FISH {
-    number_of_objects 2
-    number_of_groups 2
+    number_of_objects 1
+    number_of_groups 4
+    group_placement_radius 1
+    set_loose_grouping
+    set_gaia_object_only
+    place_on_specific_land_id NEAR_SHORE_C_ID
+    avoid_other_land_zones 0
+    find_closest
+    force_placement
+    terrain_to_place_on HARBOR_WATER
+    min_distance_group_placement 2
+    temp_min_distance_group_placement 3
+}
+
+create_object SHORE_FISH {
+    number_of_objects 1
+    number_of_groups 4
+    group_placement_radius 1
+    set_loose_grouping
+    set_gaia_object_only
+    place_on_specific_land_id NEAR_SHORE_D_ID
+    avoid_other_land_zones 0
+    find_closest
+    force_placement
+    terrain_to_place_on HARBOR_WATER
+    min_distance_group_placement 2
+    temp_min_distance_group_placement 3
+}
+
+create_object SHORE_FISH {
+    number_of_objects 1
+    number_of_groups 4
     group_placement_radius 1
     set_loose_grouping
     set_gaia_object_only
@@ -1607,12 +1837,13 @@ create_object SHORE_FISH {
     find_closest
     force_placement
     terrain_to_place_on HARBOR_WATER
-    temp_min_distance_group_placement 4
+    min_distance_group_placement 2
+    temp_min_distance_group_placement 3
 }
 
 create_object SHORE_FISH {
-    number_of_objects 2
-    number_of_groups 2
+    number_of_objects 1
+    number_of_groups 4
     group_placement_radius 1
     set_loose_grouping
     set_gaia_object_only
@@ -1621,12 +1852,43 @@ create_object SHORE_FISH {
     find_closest
     force_placement
     terrain_to_place_on HARBOR_WATER
-    temp_min_distance_group_placement 4
+    min_distance_group_placement 2
+    temp_min_distance_group_placement 3
+}
+
+create_object SHORE_FISH {
+    number_of_objects 1
+    number_of_groups 4
+    group_placement_radius 1
+    set_loose_grouping
+    set_gaia_object_only
+    place_on_specific_land_id FAR_SHORE_C_ID
+    avoid_other_land_zones 0
+    find_closest
+    force_placement
+    terrain_to_place_on HARBOR_WATER
+    min_distance_group_placement 2
+    temp_min_distance_group_placement 3
+}
+
+create_object SHORE_FISH {
+    number_of_objects 1
+    number_of_groups 4
+    group_placement_radius 1
+    set_loose_grouping
+    set_gaia_object_only
+    place_on_specific_land_id FAR_SHORE_D_ID
+    avoid_other_land_zones 0
+    find_closest
+    force_placement
+    terrain_to_place_on HARBOR_WATER
+    min_distance_group_placement 2
+    temp_min_distance_group_placement 3
 }
 
 create_object HARBOR_FISH {
-    number_of_objects 2
-    number_of_groups 2
+    number_of_objects 1
+    number_of_groups 4
     group_placement_radius 1
     set_loose_grouping
     set_gaia_object_only
@@ -1635,12 +1897,13 @@ create_object HARBOR_FISH {
     find_closest
     force_placement
     terrain_to_place_on HARBOR_WATER
-    temp_min_distance_group_placement 4
+    min_distance_group_placement 2
+    temp_min_distance_group_placement 3
 }
 
 create_object HARBOR_FISH {
-    number_of_objects 2
-    number_of_groups 2
+    number_of_objects 1
+    number_of_groups 4
     group_placement_radius 1
     set_loose_grouping
     set_gaia_object_only
@@ -1649,12 +1912,13 @@ create_object HARBOR_FISH {
     find_closest
     force_placement
     terrain_to_place_on HARBOR_WATER
-    temp_min_distance_group_placement 4
+    min_distance_group_placement 2
+    temp_min_distance_group_placement 3
 }
 
 create_object HARBOR_FISH {
-    number_of_objects 2
-    number_of_groups 2
+    number_of_objects 1
+    number_of_groups 4
     group_placement_radius 1
     set_loose_grouping
     set_gaia_object_only
@@ -1663,12 +1927,28 @@ create_object HARBOR_FISH {
     find_closest
     force_placement
     terrain_to_place_on HARBOR_WATER
-    temp_min_distance_group_placement 4
+    min_distance_group_placement 2
+    temp_min_distance_group_placement 3
 }
 
 create_object HARBOR_FISH {
-    number_of_objects 2
-    number_of_groups 2
+    number_of_objects 1
+    number_of_groups 4
+    group_placement_radius 1
+    set_loose_grouping
+    set_gaia_object_only
+    place_on_specific_land_id NEAR_DEEP_D_ID
+    avoid_other_land_zones 0
+    find_closest
+    force_placement
+    terrain_to_place_on HARBOR_WATER
+    min_distance_group_placement 2
+    temp_min_distance_group_placement 3
+}
+
+create_object HARBOR_FISH {
+    number_of_objects 1
+    number_of_groups 4
     group_placement_radius 1
     set_loose_grouping
     set_gaia_object_only
@@ -1677,12 +1957,13 @@ create_object HARBOR_FISH {
     find_closest
     force_placement
     terrain_to_place_on HARBOR_WATER
-    temp_min_distance_group_placement 4
+    min_distance_group_placement 2
+    temp_min_distance_group_placement 3
 }
 
 create_object HARBOR_FISH {
-    number_of_objects 2
-    number_of_groups 2
+    number_of_objects 1
+    number_of_groups 4
     group_placement_radius 1
     set_loose_grouping
     set_gaia_object_only
@@ -1691,12 +1972,13 @@ create_object HARBOR_FISH {
     find_closest
     force_placement
     terrain_to_place_on HARBOR_WATER
-    temp_min_distance_group_placement 4
+    min_distance_group_placement 2
+    temp_min_distance_group_placement 3
 }
 
 create_object HARBOR_FISH {
-    number_of_objects 2
-    number_of_groups 2
+    number_of_objects 1
+    number_of_groups 4
     group_placement_radius 1
     set_loose_grouping
     set_gaia_object_only
@@ -1705,7 +1987,23 @@ create_object HARBOR_FISH {
     find_closest
     force_placement
     terrain_to_place_on HARBOR_WATER
-    temp_min_distance_group_placement 4
+    min_distance_group_placement 2
+    temp_min_distance_group_placement 3
+}
+
+create_object HARBOR_FISH {
+    number_of_objects 1
+    number_of_groups 4
+    group_placement_radius 1
+    set_loose_grouping
+    set_gaia_object_only
+    place_on_specific_land_id FAR_DEEP_D_ID
+    avoid_other_land_zones 0
+    find_closest
+    force_placement
+    terrain_to_place_on HARBOR_WATER
+    min_distance_group_placement 2
+    temp_min_distance_group_placement 3
 }
 
 /* Fixed courtyard mines are always equidistant from the mirrored starts. */

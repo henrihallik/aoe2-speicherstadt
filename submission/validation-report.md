@@ -1,8 +1,8 @@
 # Static Validation Report
 
-Candidate: Speicherstadt v0.6.0
+Candidate: Speicherstadt v0.7.0
 Checked: 2026-08-11
-RMS SHA-256: `590df5bd421d3bd1d98905abbebf32605fcc676b09d24371d86443b62590b213`
+RMS SHA-256: `70fee8ab0ae66198a3ef8287052e9d21a69ffe64593ff4106d108e091cb10977`
 
 ## Map-Specific Validator
 
@@ -11,12 +11,13 @@ structure, exact transposed geometry, six crossing rectangles, non-overlapping
 land-origin squares, `border_fuzziness 100` on every constrained land, flat
 elevation, four mirrored 90-tile corner forests, the 16-clump distributed
 forest pass, twelve dedicated zone-to-zone seam connections, standard dockable
-water terrain ID 1, ten non-overlapping mirrored fish parcels, explicit
+water terrain ID 1, sixteen non-overlapping mirrored fish parcels, singleton
+fish groups with enforced inter-group spacing, explicit
 9-villager start, three equal 58-tree home woodlines, mandatory five-relic
 placement, six fixed central mine courtyards, object/resource totals,
 actor-area references, land confinement, neutral ownership, and the
-competition's prohibited mechanics. The fixed fish contract requires eight
-shore fish and twelve deep fish on each side. The mine contract requires four
+competition's prohibited mechanics. The fixed fish contract requires sixteen
+shore fish and sixteen deep fish on each side. The mine contract requires four
 3-tile golds and two 4-tile stones in the center, for full-map 1v1 totals of 42
 gold tiles and 26 stone tiles.
 
@@ -33,9 +34,10 @@ placement, not an undersized allocation; v0.6.0 fixes those quantities to six
 mandatory mirrored plots without increasing them.
 
 The Garrison Golden Lakes, Hidden Cup 5 Cross, and Warlords 2 Four Lakes use
-multiple fixed deep-fish groups plus broader shore fish. Speicherstadt v0.6.0
-now supplies 40 fish across ten separated canal parcels rather than 20, while
-retaining exact equality between the two sides.
+multiple fixed deep-fish groups plus broader shore fish. Speicherstadt v0.7.0
+supplies 64 fish across sixteen separated canal parcels. Each fish is the sole
+object in its group, with group centers kept apart, while exact equality is
+retained between the two sides.
 
 ## Current RMS Grammar
 
@@ -79,7 +81,9 @@ generates 7% more player-ground forest in 16 clumps. Version 0.5.0 replaces the
 non-dockable visual water aliases with standard water terrain ID 1 and replaces
 player-relative fish searches with five fixed shoals per side. Its targeted
 dock/fish retest confirmed that the canals accept docks and the fixed fish
-appear. Version 0.6.0 doubles each fish parcel, and replaces the central
+appear. Version 0.6.0 doubles each fish parcel and replaces the central
 multi-group search that could leave only relics with six compact fixed mine
-plots. Its central-mine count, expanded-fish count, full seed matrix, and match
-checks remain pending.
+plots. Resource-indicator testing then exposed adjacent fish inside each pair.
+Version 0.7.0 replaces every pair with four singleton groups, enforces spacing,
+and expands each canal side from five to eight reserved parcels. Its fish
+spacing, full seed matrix, and match checks remain pending.

@@ -3,10 +3,10 @@
 `Speicherstadt` is a 1v1 hybrid Random Map submission candidate for **The
 Garrison 2026 map competition**. It is designed by betwixtX with OpenAI Codex.
 
-**Current status:** v0.6.0 resource-and-fish candidate pending an in-game retest.
+**Current status:** v0.7.0 spaced-fish candidate pending an in-game retest.
 Version 0.5.0 was confirmed in game to provide dockable canals and fixed fish
-shoals. Version 0.6.0 doubles those shoals and replaces fallible central mine
-searches with six compact, mirrored courtyard plots.
+shoals. Version 0.6.0 exposed adjacent paired fish under resource indicators;
+v0.7.0 replaces those pairs with spaced singleton groups in additional parcels.
 
 ## Concept
 
@@ -35,7 +35,7 @@ player colors between sides. The geometry remains mirrored in every result.
   58-tree woodlines in different exposure profiles
 - Mainland wood: two fixed 90-tile corner forests per side plus a 7% forest
   pass split into 16 clumps across the player districts
-- Per player water: 8 shore fish and 12 deep fish across 5 fixed canal parcels
+- Per player water: 16 shore fish and 16 deep fish across 8 fixed canal parcels
 - Dock access: standard terrain ID 1 throughout both canals
 - Neutral island: four fixed 3-tile golds, two fixed 4-tile stones, 5 relics,
   and 48 trees
