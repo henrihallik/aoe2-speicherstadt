@@ -4,7 +4,7 @@ Static parsers cannot prove that AoE2 DE will generate, place, and path every
 object correctly. Complete this checklist in the same current game build that
 will be used for the submission.
 
-Test v0.4.0 or newer. Version 0.1.0 failed its large-scale topology. Version
+Test v0.5.0 or newer. Version 0.1.0 failed its large-scale topology. Version
 0.2.0 restored the intended layout, but screenshot testing found water seams at
 the crossing banks, insufficient home wood, and only four of five relics.
 Version 0.3.0 repaired the joins and relic placement constraints, but still
@@ -52,7 +52,8 @@ color assignments.
   home trees total.
 - Each player side has two fixed corner forests, and additional forest clumps
   are distributed through the outer mainland. No map corner is barren.
-- Each home canal has 4 shore fish and 6 deep fish.
+- Each player side has exactly 4 shore fish and 6 deep fish, spread across five
+  distinct reserved canal parcels rather than clustered in one location.
 - The island has 12 gold, 8 stone, exactly 5 visible relics, four wood clusters,
   and two church ruins.
 - No resource is trapped in water, inside a building, or beyond the map edge.
@@ -62,7 +63,8 @@ color assignments.
   deep-water tile at any of the twelve joins.
 - A land unit can cross through all three complete lanes.
 - A ship can traverse both canals and rotate around both ends of the island.
-- Docks can be built on both mainland canal shores.
+- Docks can be built on both mainland canal shores; canal water uses standard
+  dockable terrain ID 1 everywhere outside the shallow crossings.
 - No water or fish appears in a thin strip behind either player's mainland.
 - There are no accidental land connections around the island ends.
 - The game remains stable for five minutes while moving units, docking,

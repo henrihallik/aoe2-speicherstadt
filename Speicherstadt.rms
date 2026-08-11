@@ -1,6 +1,6 @@
 /* Compatibility: Definitive Edition */
 /*
-    Speicherstadt v0.4.0
+    Speicherstadt v0.5.0
     The Garrison 2026 map competition release candidate.
 
     Designed for:
@@ -30,8 +30,7 @@
 #const PLAYER_DETAIL 6
 #const CENTRAL_GROUND 11
 #const CENTRAL_DETAIL 25
-#const HARBOR_WATER 23
-#const HARBOR_DEEP 22
+#const HARBOR_WATER 1
 #const BRIDGE_GROUND 4
 #const OAK_FOREST 10
 
@@ -53,6 +52,16 @@
 #const FAR_UPPER_BRIDGE_ID 304
 #const FAR_MIDDLE_BRIDGE_ID 305
 #const FAR_LOWER_BRIDGE_ID 306
+#const NEAR_SHORE_A_ID 401
+#const NEAR_SHORE_B_ID 402
+#const FAR_SHORE_A_ID 403
+#const FAR_SHORE_B_ID 404
+#const NEAR_DEEP_A_ID 411
+#const NEAR_DEEP_B_ID 412
+#const NEAR_DEEP_C_ID 413
+#const FAR_DEEP_A_ID 414
+#const FAR_DEEP_B_ID 415
+#const FAR_DEEP_C_ID 416
 
 /* Unique zones let connection generation repair every bank seam directly. */
 #const NEAR_MAINLAND_ZONE 11
@@ -65,6 +74,7 @@
 #const FAR_MIDDLE_BRIDGE_ZONE 35
 #const FAR_LOWER_BRIDGE_ZONE 36
 #const CORNER_FOREST_ZONE 40
+#const WATER_RESOURCE_ZONE 50
 
 /* Actor areas used only for fair placement separation. */
 #const TC_AREA 1000
@@ -434,6 +444,337 @@ else
 endif
 
 /*
+    Fixed water lands replace fallible player-relative fish searches. Each
+    canal receives two shore-fish pairs and three deep-fish pairs, all placed
+    between crossing bands and transposed with the complete map layout.
+*/
+if VERTICAL_CANALS
+
+    create_land {
+        terrain_type HARBOR_WATER
+        land_percent 100
+        base_size 1
+        land_position 39 15
+        left_border 36
+        right_border 58
+        top_border 11
+        bottom_border 81
+        border_fuzziness 100
+        clumping_factor 100
+        other_zone_avoidance_distance 0
+        zone WATER_RESOURCE_ZONE
+        land_id NEAR_SHORE_A_ID
+    }
+
+    create_land {
+        terrain_type HARBOR_WATER
+        land_percent 100
+        base_size 1
+        land_position 39 87
+        left_border 36
+        right_border 58
+        top_border 83
+        bottom_border 9
+        border_fuzziness 100
+        clumping_factor 100
+        other_zone_avoidance_distance 0
+        zone WATER_RESOURCE_ZONE
+        land_id NEAR_SHORE_B_ID
+    }
+
+    create_land {
+        terrain_type HARBOR_WATER
+        land_percent 100
+        base_size 1
+        land_position 61 15
+        left_border 58
+        right_border 36
+        top_border 11
+        bottom_border 81
+        border_fuzziness 100
+        clumping_factor 100
+        other_zone_avoidance_distance 0
+        zone WATER_RESOURCE_ZONE
+        land_id FAR_SHORE_A_ID
+    }
+
+    create_land {
+        terrain_type HARBOR_WATER
+        land_percent 100
+        base_size 1
+        land_position 61 87
+        left_border 58
+        right_border 36
+        top_border 83
+        bottom_border 9
+        border_fuzziness 100
+        clumping_factor 100
+        other_zone_avoidance_distance 0
+        zone WATER_RESOURCE_ZONE
+        land_id FAR_SHORE_B_ID
+    }
+
+    create_land {
+        terrain_type HARBOR_WATER
+        land_percent 100
+        base_size 1
+        land_position 39 5
+        left_border 36
+        right_border 58
+        top_border 2
+        bottom_border 92
+        border_fuzziness 100
+        clumping_factor 100
+        other_zone_avoidance_distance 0
+        zone WATER_RESOURCE_ZONE
+        land_id NEAR_DEEP_A_ID
+    }
+
+    create_land {
+        terrain_type HARBOR_WATER
+        land_percent 100
+        base_size 1
+        land_position 39 37
+        left_border 36
+        right_border 58
+        top_border 33
+        bottom_border 59
+        border_fuzziness 100
+        clumping_factor 100
+        other_zone_avoidance_distance 0
+        zone WATER_RESOURCE_ZONE
+        land_id NEAR_DEEP_B_ID
+    }
+
+    create_land {
+        terrain_type HARBOR_WATER
+        land_percent 100
+        base_size 1
+        land_position 39 63
+        left_border 36
+        right_border 58
+        top_border 59
+        bottom_border 33
+        border_fuzziness 100
+        clumping_factor 100
+        other_zone_avoidance_distance 0
+        zone WATER_RESOURCE_ZONE
+        land_id NEAR_DEEP_C_ID
+    }
+
+    create_land {
+        terrain_type HARBOR_WATER
+        land_percent 100
+        base_size 1
+        land_position 61 5
+        left_border 58
+        right_border 36
+        top_border 2
+        bottom_border 92
+        border_fuzziness 100
+        clumping_factor 100
+        other_zone_avoidance_distance 0
+        zone WATER_RESOURCE_ZONE
+        land_id FAR_DEEP_A_ID
+    }
+
+    create_land {
+        terrain_type HARBOR_WATER
+        land_percent 100
+        base_size 1
+        land_position 61 37
+        left_border 58
+        right_border 36
+        top_border 33
+        bottom_border 59
+        border_fuzziness 100
+        clumping_factor 100
+        other_zone_avoidance_distance 0
+        zone WATER_RESOURCE_ZONE
+        land_id FAR_DEEP_B_ID
+    }
+
+    create_land {
+        terrain_type HARBOR_WATER
+        land_percent 100
+        base_size 1
+        land_position 61 63
+        left_border 58
+        right_border 36
+        top_border 59
+        bottom_border 33
+        border_fuzziness 100
+        clumping_factor 100
+        other_zone_avoidance_distance 0
+        zone WATER_RESOURCE_ZONE
+        land_id FAR_DEEP_C_ID
+    }
+
+else
+
+    create_land {
+        terrain_type HARBOR_WATER
+        land_percent 100
+        base_size 1
+        land_position 15 39
+        left_border 11
+        right_border 81
+        top_border 36
+        bottom_border 58
+        border_fuzziness 100
+        clumping_factor 100
+        other_zone_avoidance_distance 0
+        zone WATER_RESOURCE_ZONE
+        land_id NEAR_SHORE_A_ID
+    }
+
+    create_land {
+        terrain_type HARBOR_WATER
+        land_percent 100
+        base_size 1
+        land_position 87 39
+        left_border 83
+        right_border 9
+        top_border 36
+        bottom_border 58
+        border_fuzziness 100
+        clumping_factor 100
+        other_zone_avoidance_distance 0
+        zone WATER_RESOURCE_ZONE
+        land_id NEAR_SHORE_B_ID
+    }
+
+    create_land {
+        terrain_type HARBOR_WATER
+        land_percent 100
+        base_size 1
+        land_position 15 61
+        left_border 11
+        right_border 81
+        top_border 58
+        bottom_border 36
+        border_fuzziness 100
+        clumping_factor 100
+        other_zone_avoidance_distance 0
+        zone WATER_RESOURCE_ZONE
+        land_id FAR_SHORE_A_ID
+    }
+
+    create_land {
+        terrain_type HARBOR_WATER
+        land_percent 100
+        base_size 1
+        land_position 87 61
+        left_border 83
+        right_border 9
+        top_border 58
+        bottom_border 36
+        border_fuzziness 100
+        clumping_factor 100
+        other_zone_avoidance_distance 0
+        zone WATER_RESOURCE_ZONE
+        land_id FAR_SHORE_B_ID
+    }
+
+    create_land {
+        terrain_type HARBOR_WATER
+        land_percent 100
+        base_size 1
+        land_position 5 39
+        left_border 2
+        right_border 92
+        top_border 36
+        bottom_border 58
+        border_fuzziness 100
+        clumping_factor 100
+        other_zone_avoidance_distance 0
+        zone WATER_RESOURCE_ZONE
+        land_id NEAR_DEEP_A_ID
+    }
+
+    create_land {
+        terrain_type HARBOR_WATER
+        land_percent 100
+        base_size 1
+        land_position 37 39
+        left_border 33
+        right_border 59
+        top_border 36
+        bottom_border 58
+        border_fuzziness 100
+        clumping_factor 100
+        other_zone_avoidance_distance 0
+        zone WATER_RESOURCE_ZONE
+        land_id NEAR_DEEP_B_ID
+    }
+
+    create_land {
+        terrain_type HARBOR_WATER
+        land_percent 100
+        base_size 1
+        land_position 63 39
+        left_border 59
+        right_border 33
+        top_border 36
+        bottom_border 58
+        border_fuzziness 100
+        clumping_factor 100
+        other_zone_avoidance_distance 0
+        zone WATER_RESOURCE_ZONE
+        land_id NEAR_DEEP_C_ID
+    }
+
+    create_land {
+        terrain_type HARBOR_WATER
+        land_percent 100
+        base_size 1
+        land_position 5 61
+        left_border 2
+        right_border 92
+        top_border 58
+        bottom_border 36
+        border_fuzziness 100
+        clumping_factor 100
+        other_zone_avoidance_distance 0
+        zone WATER_RESOURCE_ZONE
+        land_id FAR_DEEP_A_ID
+    }
+
+    create_land {
+        terrain_type HARBOR_WATER
+        land_percent 100
+        base_size 1
+        land_position 37 61
+        left_border 33
+        right_border 59
+        top_border 58
+        bottom_border 36
+        border_fuzziness 100
+        clumping_factor 100
+        other_zone_avoidance_distance 0
+        zone WATER_RESOURCE_ZONE
+        land_id FAR_DEEP_B_ID
+    }
+
+    create_land {
+        terrain_type HARBOR_WATER
+        land_percent 100
+        base_size 1
+        land_position 63 61
+        left_border 59
+        right_border 33
+        top_border 58
+        bottom_border 36
+        border_fuzziness 100
+        clumping_factor 100
+        other_zone_avoidance_distance 0
+        zone WATER_RESOURCE_ZONE
+        land_id FAR_DEEP_C_ID
+    }
+
+endif
+
+/*
     Four fixed forests occupy the geometric corners in both rotations. Each
     player side therefore receives two equal 90-tile outer forests, while the
     constrained boxes keep them clear of canals and crossing approaches.
@@ -506,14 +847,6 @@ create_land {
 
 <TERRAIN_GENERATION>
 
-/* Harbor depth varies visually without changing the navigable topology. */
-create_terrain HARBOR_DEEP {
-    base_terrain HARBOR_WATER
-    land_percent 38
-    number_of_clumps 12
-    spacing_to_other_terrain_types 2
-}
-
 /*
     Distributed mainland forests fill the large outer districts that cannot
     be covered reliably by player-relative object groups alone.
@@ -555,148 +888,112 @@ create_terrain CENTRAL_DETAIL {
 /* Upper lane. */
 create_connect_land_zones NEAR_MAINLAND_ZONE NEAR_UPPER_BRIDGE_ZONE {
     replace_terrain HARBOR_WATER BRIDGE_GROUND
-    replace_terrain HARBOR_DEEP BRIDGE_GROUND
     terrain_cost HARBOR_WATER 12
-    terrain_cost HARBOR_DEEP 14
     terrain_cost BRIDGE_GROUND 1
     terrain_cost PLAYER_GROUND 1
     terrain_cost CENTRAL_GROUND 1
     terrain_size HARBOR_WATER 2 0
-    terrain_size HARBOR_DEEP 2 0
 }
 
 create_connect_land_zones NEAR_UPPER_BRIDGE_ZONE CENTRAL_ISLAND_ZONE {
     replace_terrain HARBOR_WATER BRIDGE_GROUND
-    replace_terrain HARBOR_DEEP BRIDGE_GROUND
     terrain_cost HARBOR_WATER 12
-    terrain_cost HARBOR_DEEP 14
     terrain_cost BRIDGE_GROUND 1
     terrain_cost PLAYER_GROUND 1
     terrain_cost CENTRAL_GROUND 1
     terrain_size HARBOR_WATER 2 0
-    terrain_size HARBOR_DEEP 2 0
 }
 
 create_connect_land_zones CENTRAL_ISLAND_ZONE FAR_UPPER_BRIDGE_ZONE {
     replace_terrain HARBOR_WATER BRIDGE_GROUND
-    replace_terrain HARBOR_DEEP BRIDGE_GROUND
     terrain_cost HARBOR_WATER 12
-    terrain_cost HARBOR_DEEP 14
     terrain_cost BRIDGE_GROUND 1
     terrain_cost PLAYER_GROUND 1
     terrain_cost CENTRAL_GROUND 1
     terrain_size HARBOR_WATER 2 0
-    terrain_size HARBOR_DEEP 2 0
 }
 
 create_connect_land_zones FAR_UPPER_BRIDGE_ZONE FAR_MAINLAND_ZONE {
     replace_terrain HARBOR_WATER BRIDGE_GROUND
-    replace_terrain HARBOR_DEEP BRIDGE_GROUND
     terrain_cost HARBOR_WATER 12
-    terrain_cost HARBOR_DEEP 14
     terrain_cost BRIDGE_GROUND 1
     terrain_cost PLAYER_GROUND 1
     terrain_cost CENTRAL_GROUND 1
     terrain_size HARBOR_WATER 2 0
-    terrain_size HARBOR_DEEP 2 0
 }
 
 /* Middle lane. */
 create_connect_land_zones NEAR_MAINLAND_ZONE NEAR_MIDDLE_BRIDGE_ZONE {
     replace_terrain HARBOR_WATER BRIDGE_GROUND
-    replace_terrain HARBOR_DEEP BRIDGE_GROUND
     terrain_cost HARBOR_WATER 12
-    terrain_cost HARBOR_DEEP 14
     terrain_cost BRIDGE_GROUND 1
     terrain_cost PLAYER_GROUND 1
     terrain_cost CENTRAL_GROUND 1
     terrain_size HARBOR_WATER 2 0
-    terrain_size HARBOR_DEEP 2 0
 }
 
 create_connect_land_zones NEAR_MIDDLE_BRIDGE_ZONE CENTRAL_ISLAND_ZONE {
     replace_terrain HARBOR_WATER BRIDGE_GROUND
-    replace_terrain HARBOR_DEEP BRIDGE_GROUND
     terrain_cost HARBOR_WATER 12
-    terrain_cost HARBOR_DEEP 14
     terrain_cost BRIDGE_GROUND 1
     terrain_cost PLAYER_GROUND 1
     terrain_cost CENTRAL_GROUND 1
     terrain_size HARBOR_WATER 2 0
-    terrain_size HARBOR_DEEP 2 0
 }
 
 create_connect_land_zones CENTRAL_ISLAND_ZONE FAR_MIDDLE_BRIDGE_ZONE {
     replace_terrain HARBOR_WATER BRIDGE_GROUND
-    replace_terrain HARBOR_DEEP BRIDGE_GROUND
     terrain_cost HARBOR_WATER 12
-    terrain_cost HARBOR_DEEP 14
     terrain_cost BRIDGE_GROUND 1
     terrain_cost PLAYER_GROUND 1
     terrain_cost CENTRAL_GROUND 1
     terrain_size HARBOR_WATER 2 0
-    terrain_size HARBOR_DEEP 2 0
 }
 
 create_connect_land_zones FAR_MIDDLE_BRIDGE_ZONE FAR_MAINLAND_ZONE {
     replace_terrain HARBOR_WATER BRIDGE_GROUND
-    replace_terrain HARBOR_DEEP BRIDGE_GROUND
     terrain_cost HARBOR_WATER 12
-    terrain_cost HARBOR_DEEP 14
     terrain_cost BRIDGE_GROUND 1
     terrain_cost PLAYER_GROUND 1
     terrain_cost CENTRAL_GROUND 1
     terrain_size HARBOR_WATER 2 0
-    terrain_size HARBOR_DEEP 2 0
 }
 
 /* Lower lane. */
 create_connect_land_zones NEAR_MAINLAND_ZONE NEAR_LOWER_BRIDGE_ZONE {
     replace_terrain HARBOR_WATER BRIDGE_GROUND
-    replace_terrain HARBOR_DEEP BRIDGE_GROUND
     terrain_cost HARBOR_WATER 12
-    terrain_cost HARBOR_DEEP 14
     terrain_cost BRIDGE_GROUND 1
     terrain_cost PLAYER_GROUND 1
     terrain_cost CENTRAL_GROUND 1
     terrain_size HARBOR_WATER 2 0
-    terrain_size HARBOR_DEEP 2 0
 }
 
 create_connect_land_zones NEAR_LOWER_BRIDGE_ZONE CENTRAL_ISLAND_ZONE {
     replace_terrain HARBOR_WATER BRIDGE_GROUND
-    replace_terrain HARBOR_DEEP BRIDGE_GROUND
     terrain_cost HARBOR_WATER 12
-    terrain_cost HARBOR_DEEP 14
     terrain_cost BRIDGE_GROUND 1
     terrain_cost PLAYER_GROUND 1
     terrain_cost CENTRAL_GROUND 1
     terrain_size HARBOR_WATER 2 0
-    terrain_size HARBOR_DEEP 2 0
 }
 
 create_connect_land_zones CENTRAL_ISLAND_ZONE FAR_LOWER_BRIDGE_ZONE {
     replace_terrain HARBOR_WATER BRIDGE_GROUND
-    replace_terrain HARBOR_DEEP BRIDGE_GROUND
     terrain_cost HARBOR_WATER 12
-    terrain_cost HARBOR_DEEP 14
     terrain_cost BRIDGE_GROUND 1
     terrain_cost PLAYER_GROUND 1
     terrain_cost CENTRAL_GROUND 1
     terrain_size HARBOR_WATER 2 0
-    terrain_size HARBOR_DEEP 2 0
 }
 
 create_connect_land_zones FAR_LOWER_BRIDGE_ZONE FAR_MAINLAND_ZONE {
     replace_terrain HARBOR_WATER BRIDGE_GROUND
-    replace_terrain HARBOR_DEEP BRIDGE_GROUND
     terrain_cost HARBOR_WATER 12
-    terrain_cost HARBOR_DEEP 14
     terrain_cost BRIDGE_GROUND 1
     terrain_cost PLAYER_GROUND 1
     terrain_cost CENTRAL_GROUND 1
     terrain_size HARBOR_WATER 2 0
-    terrain_size HARBOR_DEEP 2 0
 }
 
 
@@ -1056,33 +1353,149 @@ create_object START_TREE {
     avoid_actor_area FORWARD_WOOD_AREA
 }
 
-/* Equal home-water food: enough to reward a dock without forcing one. */
+/*
+    Fixed mirrored shoals guarantee ten fish on each player's canal side.
+    Each declaration owns a reserved water parcel, so forests, bridges, and
+    random object searches cannot collapse several groups into one location.
+*/
 create_object SHORE_FISH {
-    number_of_objects 4
-    number_of_groups 1
-    group_placement_radius 6
+    number_of_objects 1
+    number_of_groups 2
+    group_placement_radius 1
     set_loose_grouping
     set_gaia_object_only
-    set_place_for_every_player
-    min_distance_to_players 16
-    max_distance_to_players 25
-    min_distance_to_map_edge 6
+    place_on_specific_land_id NEAR_SHORE_A_ID
+    avoid_other_land_zones 0
+    find_closest
+    force_placement
+    terrain_to_place_on HARBOR_WATER
+    temp_min_distance_group_placement 4
+}
+
+create_object SHORE_FISH {
+    number_of_objects 1
+    number_of_groups 2
+    group_placement_radius 1
+    set_loose_grouping
+    set_gaia_object_only
+    place_on_specific_land_id NEAR_SHORE_B_ID
+    avoid_other_land_zones 0
+    find_closest
+    force_placement
+    terrain_to_place_on HARBOR_WATER
+    temp_min_distance_group_placement 4
+}
+
+create_object SHORE_FISH {
+    number_of_objects 1
+    number_of_groups 2
+    group_placement_radius 1
+    set_loose_grouping
+    set_gaia_object_only
+    place_on_specific_land_id FAR_SHORE_A_ID
+    avoid_other_land_zones 0
+    find_closest
+    force_placement
+    terrain_to_place_on HARBOR_WATER
+    temp_min_distance_group_placement 4
+}
+
+create_object SHORE_FISH {
+    number_of_objects 1
+    number_of_groups 2
+    group_placement_radius 1
+    set_loose_grouping
+    set_gaia_object_only
+    place_on_specific_land_id FAR_SHORE_B_ID
+    avoid_other_land_zones 0
+    find_closest
+    force_placement
     terrain_to_place_on HARBOR_WATER
     temp_min_distance_group_placement 4
 }
 
 create_object HARBOR_FISH {
-    number_of_objects 3
+    number_of_objects 1
     number_of_groups 2
-    group_placement_radius 7
+    group_placement_radius 1
     set_loose_grouping
     set_gaia_object_only
-    set_place_for_every_player
-    min_distance_to_players 19
-    max_distance_to_players 33
-    min_distance_to_map_edge 6
+    place_on_specific_land_id NEAR_DEEP_A_ID
+    avoid_other_land_zones 0
+    find_closest
+    force_placement
     terrain_to_place_on HARBOR_WATER
-    temp_min_distance_group_placement 8
+    temp_min_distance_group_placement 4
+}
+
+create_object HARBOR_FISH {
+    number_of_objects 1
+    number_of_groups 2
+    group_placement_radius 1
+    set_loose_grouping
+    set_gaia_object_only
+    place_on_specific_land_id NEAR_DEEP_B_ID
+    avoid_other_land_zones 0
+    find_closest
+    force_placement
+    terrain_to_place_on HARBOR_WATER
+    temp_min_distance_group_placement 4
+}
+
+create_object HARBOR_FISH {
+    number_of_objects 1
+    number_of_groups 2
+    group_placement_radius 1
+    set_loose_grouping
+    set_gaia_object_only
+    place_on_specific_land_id NEAR_DEEP_C_ID
+    avoid_other_land_zones 0
+    find_closest
+    force_placement
+    terrain_to_place_on HARBOR_WATER
+    temp_min_distance_group_placement 4
+}
+
+create_object HARBOR_FISH {
+    number_of_objects 1
+    number_of_groups 2
+    group_placement_radius 1
+    set_loose_grouping
+    set_gaia_object_only
+    place_on_specific_land_id FAR_DEEP_A_ID
+    avoid_other_land_zones 0
+    find_closest
+    force_placement
+    terrain_to_place_on HARBOR_WATER
+    temp_min_distance_group_placement 4
+}
+
+create_object HARBOR_FISH {
+    number_of_objects 1
+    number_of_groups 2
+    group_placement_radius 1
+    set_loose_grouping
+    set_gaia_object_only
+    place_on_specific_land_id FAR_DEEP_B_ID
+    avoid_other_land_zones 0
+    find_closest
+    force_placement
+    terrain_to_place_on HARBOR_WATER
+    temp_min_distance_group_placement 4
+}
+
+create_object HARBOR_FISH {
+    number_of_objects 1
+    number_of_groups 2
+    group_placement_radius 1
+    set_loose_grouping
+    set_gaia_object_only
+    place_on_specific_land_id FAR_DEEP_C_ID
+    avoid_other_land_zones 0
+    find_closest
+    force_placement
+    terrain_to_place_on HARBOR_WATER
+    temp_min_distance_group_placement 4
 }
 
 /* The island is always equidistant from the mirrored starting positions. */

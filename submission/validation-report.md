@@ -1,8 +1,8 @@
 # Static Validation Report
 
-Candidate: Speicherstadt v0.4.0
-Checked: 2026-08-05
-RMS SHA-256: `98acc664a50c8c2e2a65b2b372c85829af666da6491bfa91fa21fd67ac9f7f64`
+Candidate: Speicherstadt v0.5.0
+Checked: 2026-08-11
+RMS SHA-256: `75a7548c967f4bd94bae79f225fe728a067c3c7150fdfe6ec20c548aec8617c4`
 
 ## Map-Specific Validator
 
@@ -10,10 +10,12 @@ RMS SHA-256: `98acc664a50c8c2e2a65b2b372c85829af666da6491bfa91fa21fd67ac9f7f64`
 structure, exact transposed geometry, six crossing rectangles, non-overlapping
 land-origin squares, `border_fuzziness 100` on every constrained land, flat
 elevation, four mirrored 90-tile corner forests, the 16-clump distributed
-forest pass, twelve dedicated zone-to-zone seam connections, explicit
+forest pass, twelve dedicated zone-to-zone seam connections, standard dockable
+water terrain ID 1, ten non-overlapping mirrored fish parcels, explicit
 9-villager start, three equal 58-tree home woodlines, mandatory five-relic
 placement, object/resource totals, actor-area references, land confinement,
-neutral ownership, and the competition's prohibited mechanics.
+neutral ownership, and the competition's prohibited mechanics. The fixed fish
+contract requires four shore fish and six deep fish on each side.
 
 ## Current RMS Grammar
 
@@ -53,5 +55,7 @@ of five. Version 0.3.0 removes detached decorative road lands, gives every
 crossing a dedicated zone and four explicit seam connections, raises home wood
 to 180 trees, and makes five relics mandatory with reduced spacing. Version
 0.4.0 additionally reserves a 90-tile forest in every geometric corner and
-generates 7% more player-ground forest in 16 clumps. Its in-game retest, full
-seed matrix, and match checks remain pending.
+generates 7% more player-ground forest in 16 clumps. Version 0.5.0 replaces the
+non-dockable visual water aliases with standard water terrain ID 1 and replaces
+player-relative fish searches with five fixed shoals per side. Its targeted
+dock/fish retest, full seed matrix, and match checks remain pending.

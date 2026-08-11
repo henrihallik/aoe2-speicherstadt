@@ -178,8 +178,7 @@ for (const match of code.matchAll(/#const\s+([A-Z0-9_]+)\s+(-?\d+)/g)) {
 for (const [name, value] of [
   ["PLAYER_GROUND", 12],
   ["CENTRAL_GROUND", 11],
-  ["HARBOR_WATER", 23],
-  ["HARBOR_DEEP", 22],
+  ["HARBOR_WATER", 1],
   ["BRIDGE_GROUND", 4],
   ["OAK_FOREST", 10],
   ["NEAR_MAINLAND_ZONE", 11],
@@ -192,6 +191,17 @@ for (const [name, value] of [
   ["FAR_MIDDLE_BRIDGE_ZONE", 35],
   ["FAR_LOWER_BRIDGE_ZONE", 36],
   ["CORNER_FOREST_ZONE", 40],
+  ["WATER_RESOURCE_ZONE", 50],
+  ["NEAR_SHORE_A_ID", 401],
+  ["NEAR_SHORE_B_ID", 402],
+  ["FAR_SHORE_A_ID", 403],
+  ["FAR_SHORE_B_ID", 404],
+  ["NEAR_DEEP_A_ID", 411],
+  ["NEAR_DEEP_B_ID", 412],
+  ["NEAR_DEEP_C_ID", 413],
+  ["FAR_DEEP_A_ID", 414],
+  ["FAR_DEEP_B_ID", 415],
+  ["FAR_DEEP_C_ID", 416],
   ["START_HERDABLE", 594],
   ["START_LUREABLE", 48],
   ["START_HUNTABLE", 65],
@@ -240,6 +250,12 @@ assert.equal(landsByTerrain("PLAYER_GROUND").length, 4, "two rotated pairs of ma
 assert.equal(landsByTerrain("CENTRAL_GROUND").length, 2, "one island per rotation required");
 assert.equal(landsByTerrain("BRIDGE_GROUND").length, 12, "six bridges per rotation required");
 assert.equal(landsByTerrain("OAK_FOREST").length, 4, "all four map corners need fixed forests");
+assert.equal(
+  landsByTerrain("HARBOR_WATER").length,
+  20,
+  "five fixed fish parcels per canal are required in both rotations",
+);
+assert.ok(!/\bHARBOR_DEEP\b/.test(code), "all harbor water must use dockable terrain ID 1");
 assert.ok(!/\bROAD_GROUND\b/.test(code), "detached decorative road lands must not return");
 
 for (const block of landsByTerrain("PLAYER_GROUND")) {
@@ -362,6 +378,16 @@ const fixedLandIds = [
   "FAR_UPPER_BRIDGE_ID",
   "FAR_MIDDLE_BRIDGE_ID",
   "FAR_LOWER_BRIDGE_ID",
+  "NEAR_SHORE_A_ID",
+  "NEAR_SHORE_B_ID",
+  "FAR_SHORE_A_ID",
+  "FAR_SHORE_B_ID",
+  "NEAR_DEEP_A_ID",
+  "NEAR_DEEP_B_ID",
+  "NEAR_DEEP_C_ID",
+  "FAR_DEEP_A_ID",
+  "FAR_DEEP_B_ID",
+  "FAR_DEEP_C_ID",
 ];
 
 const expectedZoneByLandId = new Map([
@@ -374,6 +400,16 @@ const expectedZoneByLandId = new Map([
   ["FAR_UPPER_BRIDGE_ID", "FAR_UPPER_BRIDGE_ZONE"],
   ["FAR_MIDDLE_BRIDGE_ID", "FAR_MIDDLE_BRIDGE_ZONE"],
   ["FAR_LOWER_BRIDGE_ID", "FAR_LOWER_BRIDGE_ZONE"],
+  ["NEAR_SHORE_A_ID", "WATER_RESOURCE_ZONE"],
+  ["NEAR_SHORE_B_ID", "WATER_RESOURCE_ZONE"],
+  ["FAR_SHORE_A_ID", "WATER_RESOURCE_ZONE"],
+  ["FAR_SHORE_B_ID", "WATER_RESOURCE_ZONE"],
+  ["NEAR_DEEP_A_ID", "WATER_RESOURCE_ZONE"],
+  ["NEAR_DEEP_B_ID", "WATER_RESOURCE_ZONE"],
+  ["NEAR_DEEP_C_ID", "WATER_RESOURCE_ZONE"],
+  ["FAR_DEEP_A_ID", "WATER_RESOURCE_ZONE"],
+  ["FAR_DEEP_B_ID", "WATER_RESOURCE_ZONE"],
+  ["FAR_DEEP_C_ID", "WATER_RESOURCE_ZONE"],
 ]);
 
 function landGeometry(block) {
@@ -490,7 +526,7 @@ for (const orientationIndex of [0, 1]) {
 const terrainBlocks = blocksFor("create_terrain", code);
 assert.deepEqual(
   terrainBlocks.map((block) => block.name),
-  ["HARBOR_DEEP", "OAK_FOREST", "PLAYER_DETAIL", "CENTRAL_DETAIL"],
+  ["OAK_FOREST", "PLAYER_DETAIL", "CENTRAL_DETAIL"],
   "forest generation must precede the visual player-ground pass",
 );
 
@@ -536,17 +572,10 @@ for (const connection of connections) {
   );
   assert.match(
     connection.body,
-    /\breplace_terrain\s+HARBOR_DEEP\s+BRIDGE_GROUND\b/,
-    `${label} must fill deep-water visual patches with shallows`,
-  );
-  assert.match(
-    connection.body,
     /\bterrain_cost\s+HARBOR_WATER\s+12\b/,
     `${label} must prefer the existing bridge and banks over open water`,
   );
-  assert.match(connection.body, /\bterrain_cost\s+HARBOR_DEEP\s+14\b/);
   assert.match(connection.body, /\bterrain_size\s+HARBOR_WATER\s+2\s+0\b/);
-  assert.match(connection.body, /\bterrain_size\s+HARBOR_DEEP\s+2\s+0\b/);
   assert.ok(
     !/\bdefault_terrain_replacement\b/.test(connection.body),
     `${label} must not repaint mainland or island terrain`,
@@ -611,8 +640,47 @@ assert.equal(totalFor("FORAGE", playerObjects), 6, "each player needs 6 forage b
 assert.equal(totalFor("GOLD", playerObjects), 15, "each player needs 7+4+4 home gold");
 assert.equal(totalFor("STONE", playerObjects), 9, "each player needs 5+4 home stone");
 assert.equal(totalFor("START_TREE", playerObjects), 180, "each player needs 180 guaranteed trees");
-assert.equal(totalFor("SHORE_FISH", playerObjects), 4, "each player needs 4 shore fish");
-assert.equal(totalFor("HARBOR_FISH", playerObjects), 6, "each player needs 6 deep fish");
+assert.equal(totalFor("SHORE_FISH", playerObjects), 0, "fish must use fixed neutral parcels");
+assert.equal(totalFor("HARBOR_FISH", playerObjects), 0, "fish must use fixed neutral parcels");
+
+const fixedFishExpectations = new Map([
+  ["NEAR_SHORE_A_ID", "SHORE_FISH"],
+  ["NEAR_SHORE_B_ID", "SHORE_FISH"],
+  ["FAR_SHORE_A_ID", "SHORE_FISH"],
+  ["FAR_SHORE_B_ID", "SHORE_FISH"],
+  ["NEAR_DEEP_A_ID", "HARBOR_FISH"],
+  ["NEAR_DEEP_B_ID", "HARBOR_FISH"],
+  ["NEAR_DEEP_C_ID", "HARBOR_FISH"],
+  ["FAR_DEEP_A_ID", "HARBOR_FISH"],
+  ["FAR_DEEP_B_ID", "HARBOR_FISH"],
+  ["FAR_DEEP_C_ID", "HARBOR_FISH"],
+]);
+const allFish = objectBlocks.filter((block) =>
+  ["SHORE_FISH", "HARBOR_FISH"].includes(block.name),
+);
+assert.equal(allFish.length, fixedFishExpectations.size, "every fish parcel needs one object block");
+assert.equal(totalFor("SHORE_FISH", allFish), 8, "four shore parcels must hold two fish each");
+assert.equal(totalFor("HARBOR_FISH", allFish), 12, "six deep parcels must hold two fish each");
+
+for (const [landId, fishType] of fixedFishExpectations) {
+  const matching = allFish.filter(
+    (block) => valueFor("place_on_specific_land_id", block.body) === landId,
+  );
+  assert.equal(matching.length, 1, `${landId} needs exactly one fish declaration`);
+  const fish = matching[0];
+  assert.equal(fish.name, fishType, `${landId} has the wrong fish type`);
+  assert.equal(objectQuantity(fish), 2, `${landId} must contain exactly two fish`);
+  assert.equal(valueFor("number_of_objects", fish.body), "1");
+  assert.equal(valueFor("number_of_groups", fish.body), "2");
+  assert.equal(valueFor("group_placement_radius", fish.body), "1");
+  assert.equal(valueFor("avoid_other_land_zones", fish.body), "0");
+  assert.equal(valueFor("terrain_to_place_on", fish.body), "HARBOR_WATER");
+  assert.equal(valueFor("temp_min_distance_group_placement", fish.body), "4");
+  assert.match(fish.body, /\bset_gaia_object_only\b/);
+  assert.match(fish.body, /\bfind_closest\b/);
+  assert.match(fish.body, /\bforce_placement\b/);
+  assert.ok(!/\bset_place_for_every_player\b/.test(fish.body));
+}
 
 const homeWoodlines = playerObjects.filter(
   (block) => block.name === "START_TREE" && valueFor("number_of_groups", block.body) === "1",
@@ -622,16 +690,6 @@ for (const woodline of homeWoodlines) {
   assert.equal(valueFor("number_of_objects", woodline.body), "58", "woodlines must be equal");
   assert.equal(valueFor("group_placement_radius", woodline.body), "7");
   assert.match(woodline.body, /\bforce_placement\b/, "home woodlines must be mandatory");
-}
-
-for (const fish of playerObjects.filter((block) =>
-  ["SHORE_FISH", "HARBOR_FISH"].includes(block.name),
-)) {
-  assert.equal(
-    valueFor("min_distance_to_map_edge", fish.body),
-    "6",
-    `${fish.name} must remain in the usable canal rather than the map edge`,
-  );
 }
 
 assert.equal(totalFor("GOLD", centralObjects), 12, "the island needs four 3-tile golds");
@@ -687,6 +745,7 @@ console.log("  topology: 2 connected canals, 1 central island, 6 crossings");
 console.log("  quick start: 9 generic villagers, 2 houses, standard resource adjustment");
 console.log("  per player: 8 sheep, 2 boar, 4 deer, 15 gold, 9 stone, 180 home trees");
 console.log("  mainland wood: 4 fixed 90-tile corner forests + 7% distributed forest terrain");
-console.log("  per player water: 4 shore fish, 6 deep fish");
+console.log("  dockable canals: terrain ID 1 throughout");
+console.log("  fixed canal water: 4 shore fish and 6 deep fish per side across 5 slots");
 console.log("  neutral island: 12 gold, 8 stone, 5 relics, 48 trees, 2 church ruins");
 console.log("  integrity: no unit/building attribute changes or scripted income");

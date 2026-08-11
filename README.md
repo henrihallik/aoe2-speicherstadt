@@ -3,12 +3,11 @@
 `Speicherstadt` is a 1v1 hybrid Random Map submission candidate for **The
 Garrison 2026 map competition**. It is designed by betwixtX with OpenAI Codex.
 
-**Current status:** v0.4.0 runtime correction pending an in-game retest and
-authentic AoE2 DE screenshots. Version 0.3.0 repaired the crossing joins and
-made all five central relics mandatory, but its player-relative tree groups
-still left the large outer districts and map corners barren. Version 0.4.0
-keeps the equal home woodlines and adds fixed corner forests plus distributed
-mainland forest terrain.
+**Current status:** v0.5.0 dock-and-fish correction pending an in-game retest.
+Version 0.4.0 fixed the barren outer districts with mirrored corner forests and
+distributed mainland wood. Version 0.5.0 changes every canal tile to standard
+dockable water terrain and reserves five separate fish parcels on each side,
+eliminating the fallible player-relative water search.
 
 ## Concept
 
@@ -37,7 +36,8 @@ player colors between sides. The geometry remains mirrored in every result.
   58-tree woodlines in different exposure profiles
 - Mainland wood: two fixed 90-tile corner forests per side plus a 7% forest
   pass split into 16 clumps across the player districts
-- Per player water: 4 shore fish and 6 deep fish
+- Per player water: 4 shore fish and 6 deep fish across 5 fixed canal parcels
+- Dock access: standard terrain ID 1 throughout both canals
 - Neutral island: four 3-tile golds, two 4-tile stones, 5 relics, and 48 trees
 - Flat elevation across all six crossings
 - No triggers, XS, custom includes, unit/building attribute changes, scripted
