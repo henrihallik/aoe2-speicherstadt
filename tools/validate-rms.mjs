@@ -192,6 +192,7 @@ for (const [name, value] of [
   ["FAR_LOWER_BRIDGE_ZONE", 36],
   ["CORNER_FOREST_ZONE", 40],
   ["WATER_RESOURCE_ZONE", 50],
+  ["CENTRAL_RESOURCE_ZONE", 60],
   ["NEAR_SHORE_A_ID", 401],
   ["NEAR_SHORE_B_ID", 402],
   ["FAR_SHORE_A_ID", 403],
@@ -202,6 +203,12 @@ for (const [name, value] of [
   ["FAR_DEEP_A_ID", 414],
   ["FAR_DEEP_B_ID", 415],
   ["FAR_DEEP_C_ID", 416],
+  ["CENTRAL_GOLD_A_ID", 501],
+  ["CENTRAL_GOLD_B_ID", 502],
+  ["CENTRAL_GOLD_C_ID", 503],
+  ["CENTRAL_GOLD_D_ID", 504],
+  ["CENTRAL_STONE_A_ID", 511],
+  ["CENTRAL_STONE_B_ID", 512],
   ["START_HERDABLE", 594],
   ["START_LUREABLE", 48],
   ["START_HUNTABLE", 65],
@@ -248,6 +255,11 @@ const landsByTerrain = (terrain) =>
 
 assert.equal(landsByTerrain("PLAYER_GROUND").length, 4, "two rotated pairs of mainlands required");
 assert.equal(landsByTerrain("CENTRAL_GROUND").length, 2, "one island per rotation required");
+assert.equal(
+  landsByTerrain("CENTRAL_DETAIL").length,
+  12,
+  "six fixed central mine plots are required in both rotations",
+);
 assert.equal(landsByTerrain("BRIDGE_GROUND").length, 12, "six bridges per rotation required");
 assert.equal(landsByTerrain("OAK_FOREST").length, 4, "all four map corners need fixed forests");
 assert.equal(
@@ -388,6 +400,12 @@ const fixedLandIds = [
   "FAR_DEEP_A_ID",
   "FAR_DEEP_B_ID",
   "FAR_DEEP_C_ID",
+  "CENTRAL_GOLD_A_ID",
+  "CENTRAL_GOLD_B_ID",
+  "CENTRAL_GOLD_C_ID",
+  "CENTRAL_GOLD_D_ID",
+  "CENTRAL_STONE_A_ID",
+  "CENTRAL_STONE_B_ID",
 ];
 
 const expectedZoneByLandId = new Map([
@@ -410,6 +428,12 @@ const expectedZoneByLandId = new Map([
   ["FAR_DEEP_A_ID", "WATER_RESOURCE_ZONE"],
   ["FAR_DEEP_B_ID", "WATER_RESOURCE_ZONE"],
   ["FAR_DEEP_C_ID", "WATER_RESOURCE_ZONE"],
+  ["CENTRAL_GOLD_A_ID", "CENTRAL_RESOURCE_ZONE"],
+  ["CENTRAL_GOLD_B_ID", "CENTRAL_RESOURCE_ZONE"],
+  ["CENTRAL_GOLD_C_ID", "CENTRAL_RESOURCE_ZONE"],
+  ["CENTRAL_GOLD_D_ID", "CENTRAL_RESOURCE_ZONE"],
+  ["CENTRAL_STONE_A_ID", "CENTRAL_RESOURCE_ZONE"],
+  ["CENTRAL_STONE_B_ID", "CENTRAL_RESOURCE_ZONE"],
 ]);
 
 function landGeometry(block) {
@@ -446,12 +470,37 @@ for (const landId of fixedLandIds) {
       expectedZoneByLandId.get(landId),
       `${landId} must use its dedicated connection zone`,
     );
-    assert.equal(
-      valueFor("land_percent", block.body),
-      "100",
-      `${landId} must fully fill its constrained rectangle`,
-    );
+    if (expectedZoneByLandId.get(landId) === "CENTRAL_RESOURCE_ZONE") {
+      assert.equal(valueFor("land_percent", block.body), undefined);
+    } else {
+      assert.equal(
+        valueFor("land_percent", block.body),
+        "100",
+        `${landId} must fully fill its constrained rectangle`,
+      );
+    }
   }
+}
+
+const centralMineLandIds = new Set([
+  "CENTRAL_GOLD_A_ID",
+  "CENTRAL_GOLD_B_ID",
+  "CENTRAL_GOLD_C_ID",
+  "CENTRAL_GOLD_D_ID",
+  "CENTRAL_STONE_A_ID",
+  "CENTRAL_STONE_B_ID",
+]);
+for (const block of landBlocks.filter((candidate) =>
+  centralMineLandIds.has(valueFor("land_id", candidate.body)),
+)) {
+  assert.equal(valueFor("terrain_type", block.body), "CENTRAL_DETAIL");
+  assert.equal(valueFor("number_of_tiles", block.body), "25");
+  assert.equal(valueFor("base_size", block.body), "2");
+  assert.equal(
+    valueFor("land_percent", block.body),
+    undefined,
+    "central mine plots must stay compact rather than fill their whole bounds",
+  );
 }
 
 /* AoE2 places every square land origin before any land starts growing. */
@@ -589,6 +638,9 @@ const playerObjects = objectBlocks.filter((block) =>
 const centralObjects = objectBlocks.filter((block) =>
   /\bplace_on_specific_land_id\s+CENTRAL_ISLAND_ID\b/.test(block.body),
 );
+const centralMineObjects = objectBlocks.filter((block) =>
+  centralMineLandIds.has(valueFor("place_on_specific_land_id", block.body)),
+);
 const mainlandObjects = playerObjects.filter((block) =>
   /\bterrain_to_place_on\s+PLAYER_GROUND\b/.test(block.body),
 );
@@ -659,8 +711,8 @@ const allFish = objectBlocks.filter((block) =>
   ["SHORE_FISH", "HARBOR_FISH"].includes(block.name),
 );
 assert.equal(allFish.length, fixedFishExpectations.size, "every fish parcel needs one object block");
-assert.equal(totalFor("SHORE_FISH", allFish), 8, "four shore parcels must hold two fish each");
-assert.equal(totalFor("HARBOR_FISH", allFish), 12, "six deep parcels must hold two fish each");
+assert.equal(totalFor("SHORE_FISH", allFish), 16, "four shore parcels must hold four fish each");
+assert.equal(totalFor("HARBOR_FISH", allFish), 24, "six deep parcels must hold four fish each");
 
 for (const [landId, fishType] of fixedFishExpectations) {
   const matching = allFish.filter(
@@ -669,8 +721,8 @@ for (const [landId, fishType] of fixedFishExpectations) {
   assert.equal(matching.length, 1, `${landId} needs exactly one fish declaration`);
   const fish = matching[0];
   assert.equal(fish.name, fishType, `${landId} has the wrong fish type`);
-  assert.equal(objectQuantity(fish), 2, `${landId} must contain exactly two fish`);
-  assert.equal(valueFor("number_of_objects", fish.body), "1");
+  assert.equal(objectQuantity(fish), 4, `${landId} must contain exactly four fish`);
+  assert.equal(valueFor("number_of_objects", fish.body), "2");
   assert.equal(valueFor("number_of_groups", fish.body), "2");
   assert.equal(valueFor("group_placement_radius", fish.body), "1");
   assert.equal(valueFor("avoid_other_land_zones", fish.body), "0");
@@ -682,6 +734,51 @@ for (const [landId, fishType] of fixedFishExpectations) {
   assert.ok(!/\bset_place_for_every_player\b/.test(fish.body));
 }
 
+const fixedCentralMineExpectations = new Map([
+  ["CENTRAL_GOLD_A_ID", ["GOLD", 3]],
+  ["CENTRAL_GOLD_B_ID", ["GOLD", 3]],
+  ["CENTRAL_GOLD_C_ID", ["GOLD", 3]],
+  ["CENTRAL_GOLD_D_ID", ["GOLD", 3]],
+  ["CENTRAL_STONE_A_ID", ["STONE", 4]],
+  ["CENTRAL_STONE_B_ID", ["STONE", 4]],
+]);
+assert.equal(
+  centralMineObjects.length,
+  fixedCentralMineExpectations.size,
+  "every central mine plot needs one object block",
+);
+for (const [landId, [mineType, quantity]] of fixedCentralMineExpectations) {
+  const matching = centralMineObjects.filter(
+    (block) => valueFor("place_on_specific_land_id", block.body) === landId,
+  );
+  assert.equal(matching.length, 1, `${landId} needs exactly one mine declaration`);
+  const mine = matching[0];
+  assert.equal(mine.name, mineType, `${landId} has the wrong mine type`);
+  assert.equal(objectQuantity(mine), quantity, `${landId} has the wrong tile count`);
+  assert.equal(valueFor("number_of_groups", mine.body), "1");
+  assert.equal(valueFor("group_placement_radius", mine.body), "2");
+  assert.equal(valueFor("avoid_other_land_zones", mine.body), "0");
+  assert.equal(valueFor("terrain_to_place_on", mine.body), "CENTRAL_DETAIL");
+  assert.match(mine.body, /\bset_tight_grouping\b/);
+  assert.match(mine.body, /\bset_gaia_object_only\b/);
+  assert.match(mine.body, /\bfind_closest\b/);
+  assert.match(mine.body, /\bforce_placement\b/);
+  assert.ok(!/\bset_place_for_every_player\b/.test(mine.body));
+}
+
+assert.equal(totalFor("GOLD", centralMineObjects), 12, "the island needs four fixed 3-tile golds");
+assert.equal(totalFor("STONE", centralMineObjects), 8, "the island needs two fixed 4-tile stones");
+assert.equal(
+  2 * totalFor("GOLD", playerObjects) + totalFor("GOLD", centralMineObjects),
+  42,
+  "a 1v1 generation needs 42 gold tiles in total",
+);
+assert.equal(
+  2 * totalFor("STONE", playerObjects) + totalFor("STONE", centralMineObjects),
+  26,
+  "a 1v1 generation needs 26 stone tiles in total",
+);
+
 const homeWoodlines = playerObjects.filter(
   (block) => block.name === "START_TREE" && valueFor("number_of_groups", block.body) === "1",
 );
@@ -692,8 +789,8 @@ for (const woodline of homeWoodlines) {
   assert.match(woodline.body, /\bforce_placement\b/, "home woodlines must be mandatory");
 }
 
-assert.equal(totalFor("GOLD", centralObjects), 12, "the island needs four 3-tile golds");
-assert.equal(totalFor("STONE", centralObjects), 8, "the island needs two 4-tile stones");
+assert.equal(totalFor("GOLD", centralObjects), 0, "central mines must use fixed courtyard plots");
+assert.equal(totalFor("STONE", centralObjects), 0, "central mines must use fixed courtyard plots");
 assert.equal(totalFor("RELIC", centralObjects), 5, "the island needs five relics");
 assert.equal(totalFor("START_TREE", centralObjects), 48, "the island needs four wood clusters");
 assert.equal(totalFor("CHURCH_RUIN", centralObjects), 2, "the island needs two church ruins");
@@ -746,6 +843,6 @@ console.log("  quick start: 9 generic villagers, 2 houses, standard resource adj
 console.log("  per player: 8 sheep, 2 boar, 4 deer, 15 gold, 9 stone, 180 home trees");
 console.log("  mainland wood: 4 fixed 90-tile corner forests + 7% distributed forest terrain");
 console.log("  dockable canals: terrain ID 1 throughout");
-console.log("  fixed canal water: 4 shore fish and 6 deep fish per side across 5 slots");
-console.log("  neutral island: 12 gold, 8 stone, 5 relics, 48 trees, 2 church ruins");
+console.log("  fixed canal water: 8 shore fish and 12 deep fish per side across 5 slots");
+console.log("  neutral island: 12 fixed gold, 8 fixed stone, 5 relics, 48 trees, 2 church ruins");
 console.log("  integrity: no unit/building attribute changes or scripted income");

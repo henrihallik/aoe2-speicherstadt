@@ -4,8 +4,8 @@ set -euo pipefail
 ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 DIST_DIR="$ROOT/dist"
 RMS_SOURCE="$ROOT/Speicherstadt.rms"
-RMS_RELEASE="$DIST_DIR/Speicherstadt-Garrison-2026-v0.5.0.rms"
-ZIP_RELEASE="$DIST_DIR/Speicherstadt-Garrison-2026-v0.5.0.zip"
+RMS_RELEASE="$DIST_DIR/Speicherstadt-Garrison-2026-v0.6.0.rms"
+ZIP_RELEASE="$DIST_DIR/Speicherstadt-Garrison-2026-v0.6.0.zip"
 SCREENSHOT_DIR="$ROOT/submission/screenshots"
 SCREENSHOTS=(
     "$SCREENSHOT_DIR/01-overview.png"

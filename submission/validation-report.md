@@ -1,8 +1,8 @@
 # Static Validation Report
 
-Candidate: Speicherstadt v0.5.0
+Candidate: Speicherstadt v0.6.0
 Checked: 2026-08-11
-RMS SHA-256: `75a7548c967f4bd94bae79f225fe728a067c3c7150fdfe6ec20c548aec8617c4`
+RMS SHA-256: `590df5bd421d3bd1d98905abbebf32605fcc676b09d24371d86443b62590b213`
 
 ## Map-Specific Validator
 
@@ -13,9 +13,29 @@ elevation, four mirrored 90-tile corner forests, the 16-clump distributed
 forest pass, twelve dedicated zone-to-zone seam connections, standard dockable
 water terrain ID 1, ten non-overlapping mirrored fish parcels, explicit
 9-villager start, three equal 58-tree home woodlines, mandatory five-relic
-placement, object/resource totals, actor-area references, land confinement,
-neutral ownership, and the competition's prohibited mechanics. The fixed fish
-contract requires four shore fish and six deep fish on each side.
+placement, six fixed central mine courtyards, object/resource totals,
+actor-area references, land confinement, neutral ownership, and the
+competition's prohibited mechanics. The fixed fish contract requires eight
+shore fish and twelve deep fish on each side. The mine contract requires four
+3-tile golds and two 4-tile stones in the center, for full-map 1v1 totals of 42
+gold tiles and 26 stone tiles.
+
+## Competitive Resource Benchmark
+
+Tournament scripts archived in `AntoineRoll/python-aoe2rms` at commit
+`20fc677c5d884d1c1a61d8a8aede5f8973516927` were compared directly. NAC5
+Arabia and NAC5 Arena both allocate 7+4+4 gold and 5+4 stone per player, exactly
+matching Speicherstadt's 15 home gold and 9 home stone. NAC5 Arena additionally
+places 6 neutral gold and 4 neutral stone, for two-player totals of 36 and 22.
+Speicherstadt already targets 42 gold and 26 stone after its 12 central gold
+and 8 central stone are included. The defect was therefore unreliable central
+placement, not an undersized allocation; v0.6.0 fixes those quantities to six
+mandatory mirrored plots without increasing them.
+
+The Garrison Golden Lakes, Hidden Cup 5 Cross, and Warlords 2 Four Lakes use
+multiple fixed deep-fish groups plus broader shore fish. Speicherstadt v0.6.0
+now supplies 40 fish across ten separated canal parcels rather than 20, while
+retaining exact equality between the two sides.
 
 ## Current RMS Grammar
 
@@ -58,4 +78,8 @@ to 180 trees, and makes five relics mandatory with reduced spacing. Version
 generates 7% more player-ground forest in 16 clumps. Version 0.5.0 replaces the
 non-dockable visual water aliases with standard water terrain ID 1 and replaces
 player-relative fish searches with five fixed shoals per side. Its targeted
-dock/fish retest, full seed matrix, and match checks remain pending.
+dock/fish retest confirmed that the canals accept docks and the fixed fish
+appear. Version 0.6.0 doubles each fish parcel, and replaces the central
+multi-group search that could leave only relics with six compact fixed mine
+plots. Its central-mine count, expanded-fish count, full seed matrix, and match
+checks remain pending.

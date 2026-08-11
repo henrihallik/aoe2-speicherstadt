@@ -1,6 +1,6 @@
 /* Compatibility: Definitive Edition */
 /*
-    Speicherstadt v0.5.0
+    Speicherstadt v0.6.0
     The Garrison 2026 map competition release candidate.
 
     Designed for:
@@ -62,6 +62,12 @@
 #const FAR_DEEP_A_ID 414
 #const FAR_DEEP_B_ID 415
 #const FAR_DEEP_C_ID 416
+#const CENTRAL_GOLD_A_ID 501
+#const CENTRAL_GOLD_B_ID 502
+#const CENTRAL_GOLD_C_ID 503
+#const CENTRAL_GOLD_D_ID 504
+#const CENTRAL_STONE_A_ID 511
+#const CENTRAL_STONE_B_ID 512
 
 /* Unique zones let connection generation repair every bank seam directly. */
 #const NEAR_MAINLAND_ZONE 11
@@ -75,6 +81,7 @@
 #const FAR_LOWER_BRIDGE_ZONE 36
 #const CORNER_FOREST_ZONE 40
 #const WATER_RESOURCE_ZONE 50
+#const CENTRAL_RESOURCE_ZONE 60
 
 /* Actor areas used only for fair placement separation. */
 #const TC_AREA 1000
@@ -445,8 +452,8 @@ endif
 
 /*
     Fixed water lands replace fallible player-relative fish searches. Each
-    canal receives two shore-fish pairs and three deep-fish pairs, all placed
-    between crossing bands and transposed with the complete map layout.
+    canal side receives two shore-fish parcels and three deep-fish parcels,
+    all placed between crossing bands and transposed with the complete layout.
 */
 if VERTICAL_CANALS
 
@@ -770,6 +777,209 @@ else
         other_zone_avoidance_distance 0
         zone WATER_RESOURCE_ZONE
         land_id FAR_DEEP_C_ID
+    }
+
+endif
+
+/*
+    Six fixed courtyard plots guarantee the contested mine count. Their
+    positions form mirrored pairs between the bridge bands and transpose with
+    the complete map, so every mine remains equally exposed to both players.
+*/
+if VERTICAL_CANALS
+
+    create_land {
+        terrain_type CENTRAL_DETAIL
+        number_of_tiles 25
+        base_size 2
+        land_position 50 14
+        left_border 47
+        right_border 47
+        top_border 11
+        bottom_border 83
+        border_fuzziness 100
+        clumping_factor 100
+        other_zone_avoidance_distance 0
+        zone CENTRAL_RESOURCE_ZONE
+        land_id CENTRAL_GOLD_A_ID
+    }
+
+    create_land {
+        terrain_type CENTRAL_DETAIL
+        number_of_tiles 25
+        base_size 2
+        land_position 50 34
+        left_border 47
+        right_border 47
+        top_border 31
+        bottom_border 63
+        border_fuzziness 100
+        clumping_factor 100
+        other_zone_avoidance_distance 0
+        zone CENTRAL_RESOURCE_ZONE
+        land_id CENTRAL_GOLD_B_ID
+    }
+
+    create_land {
+        terrain_type CENTRAL_DETAIL
+        number_of_tiles 25
+        base_size 2
+        land_position 50 66
+        left_border 47
+        right_border 47
+        top_border 63
+        bottom_border 31
+        border_fuzziness 100
+        clumping_factor 100
+        other_zone_avoidance_distance 0
+        zone CENTRAL_RESOURCE_ZONE
+        land_id CENTRAL_GOLD_C_ID
+    }
+
+    create_land {
+        terrain_type CENTRAL_DETAIL
+        number_of_tiles 25
+        base_size 2
+        land_position 50 86
+        left_border 47
+        right_border 47
+        top_border 83
+        bottom_border 11
+        border_fuzziness 100
+        clumping_factor 100
+        other_zone_avoidance_distance 0
+        zone CENTRAL_RESOURCE_ZONE
+        land_id CENTRAL_GOLD_D_ID
+    }
+
+    create_land {
+        terrain_type CENTRAL_DETAIL
+        number_of_tiles 25
+        base_size 2
+        land_position 50 43
+        left_border 47
+        right_border 47
+        top_border 40
+        bottom_border 54
+        border_fuzziness 100
+        clumping_factor 100
+        other_zone_avoidance_distance 0
+        zone CENTRAL_RESOURCE_ZONE
+        land_id CENTRAL_STONE_A_ID
+    }
+
+    create_land {
+        terrain_type CENTRAL_DETAIL
+        number_of_tiles 25
+        base_size 2
+        land_position 50 57
+        left_border 47
+        right_border 47
+        top_border 54
+        bottom_border 40
+        border_fuzziness 100
+        clumping_factor 100
+        other_zone_avoidance_distance 0
+        zone CENTRAL_RESOURCE_ZONE
+        land_id CENTRAL_STONE_B_ID
+    }
+
+else
+
+    create_land {
+        terrain_type CENTRAL_DETAIL
+        number_of_tiles 25
+        base_size 2
+        land_position 14 50
+        left_border 11
+        right_border 83
+        top_border 47
+        bottom_border 47
+        border_fuzziness 100
+        clumping_factor 100
+        other_zone_avoidance_distance 0
+        zone CENTRAL_RESOURCE_ZONE
+        land_id CENTRAL_GOLD_A_ID
+    }
+
+    create_land {
+        terrain_type CENTRAL_DETAIL
+        number_of_tiles 25
+        base_size 2
+        land_position 34 50
+        left_border 31
+        right_border 63
+        top_border 47
+        bottom_border 47
+        border_fuzziness 100
+        clumping_factor 100
+        other_zone_avoidance_distance 0
+        zone CENTRAL_RESOURCE_ZONE
+        land_id CENTRAL_GOLD_B_ID
+    }
+
+    create_land {
+        terrain_type CENTRAL_DETAIL
+        number_of_tiles 25
+        base_size 2
+        land_position 66 50
+        left_border 63
+        right_border 31
+        top_border 47
+        bottom_border 47
+        border_fuzziness 100
+        clumping_factor 100
+        other_zone_avoidance_distance 0
+        zone CENTRAL_RESOURCE_ZONE
+        land_id CENTRAL_GOLD_C_ID
+    }
+
+    create_land {
+        terrain_type CENTRAL_DETAIL
+        number_of_tiles 25
+        base_size 2
+        land_position 86 50
+        left_border 83
+        right_border 11
+        top_border 47
+        bottom_border 47
+        border_fuzziness 100
+        clumping_factor 100
+        other_zone_avoidance_distance 0
+        zone CENTRAL_RESOURCE_ZONE
+        land_id CENTRAL_GOLD_D_ID
+    }
+
+    create_land {
+        terrain_type CENTRAL_DETAIL
+        number_of_tiles 25
+        base_size 2
+        land_position 43 50
+        left_border 40
+        right_border 54
+        top_border 47
+        bottom_border 47
+        border_fuzziness 100
+        clumping_factor 100
+        other_zone_avoidance_distance 0
+        zone CENTRAL_RESOURCE_ZONE
+        land_id CENTRAL_STONE_A_ID
+    }
+
+    create_land {
+        terrain_type CENTRAL_DETAIL
+        number_of_tiles 25
+        base_size 2
+        land_position 57 50
+        left_border 54
+        right_border 40
+        top_border 47
+        bottom_border 47
+        border_fuzziness 100
+        clumping_factor 100
+        other_zone_avoidance_distance 0
+        zone CENTRAL_RESOURCE_ZONE
+        land_id CENTRAL_STONE_B_ID
     }
 
 endif
@@ -1354,12 +1564,12 @@ create_object START_TREE {
 }
 
 /*
-    Fixed mirrored shoals guarantee ten fish on each player's canal side.
-    Each declaration owns a reserved water parcel, so forests, bridges, and
-    random object searches cannot collapse several groups into one location.
+    Fixed mirrored shoals guarantee twenty fish on each player's canal side.
+    Each declaration owns a reserved water parcel containing two compact
+    pairs, so forests and bridges cannot collapse the fish into one location.
 */
 create_object SHORE_FISH {
-    number_of_objects 1
+    number_of_objects 2
     number_of_groups 2
     group_placement_radius 1
     set_loose_grouping
@@ -1373,7 +1583,7 @@ create_object SHORE_FISH {
 }
 
 create_object SHORE_FISH {
-    number_of_objects 1
+    number_of_objects 2
     number_of_groups 2
     group_placement_radius 1
     set_loose_grouping
@@ -1387,7 +1597,7 @@ create_object SHORE_FISH {
 }
 
 create_object SHORE_FISH {
-    number_of_objects 1
+    number_of_objects 2
     number_of_groups 2
     group_placement_radius 1
     set_loose_grouping
@@ -1401,7 +1611,7 @@ create_object SHORE_FISH {
 }
 
 create_object SHORE_FISH {
-    number_of_objects 1
+    number_of_objects 2
     number_of_groups 2
     group_placement_radius 1
     set_loose_grouping
@@ -1415,7 +1625,7 @@ create_object SHORE_FISH {
 }
 
 create_object HARBOR_FISH {
-    number_of_objects 1
+    number_of_objects 2
     number_of_groups 2
     group_placement_radius 1
     set_loose_grouping
@@ -1429,7 +1639,7 @@ create_object HARBOR_FISH {
 }
 
 create_object HARBOR_FISH {
-    number_of_objects 1
+    number_of_objects 2
     number_of_groups 2
     group_placement_radius 1
     set_loose_grouping
@@ -1443,7 +1653,7 @@ create_object HARBOR_FISH {
 }
 
 create_object HARBOR_FISH {
-    number_of_objects 1
+    number_of_objects 2
     number_of_groups 2
     group_placement_radius 1
     set_loose_grouping
@@ -1457,7 +1667,7 @@ create_object HARBOR_FISH {
 }
 
 create_object HARBOR_FISH {
-    number_of_objects 1
+    number_of_objects 2
     number_of_groups 2
     group_placement_radius 1
     set_loose_grouping
@@ -1471,7 +1681,7 @@ create_object HARBOR_FISH {
 }
 
 create_object HARBOR_FISH {
-    number_of_objects 1
+    number_of_objects 2
     number_of_groups 2
     group_placement_radius 1
     set_loose_grouping
@@ -1485,7 +1695,7 @@ create_object HARBOR_FISH {
 }
 
 create_object HARBOR_FISH {
-    number_of_objects 1
+    number_of_objects 2
     number_of_groups 2
     group_placement_radius 1
     set_loose_grouping
@@ -1498,29 +1708,86 @@ create_object HARBOR_FISH {
     temp_min_distance_group_placement 4
 }
 
-/* The island is always equidistant from the mirrored starting positions. */
+/* Fixed courtyard mines are always equidistant from the mirrored starts. */
 create_object GOLD {
     number_of_objects 3
-    number_of_groups 4
+    number_of_groups 1
     group_placement_radius 2
     set_tight_grouping
     set_gaia_object_only
-    place_on_specific_land_id CENTRAL_ISLAND_ID
-    avoid_other_land_zones 2
-    min_distance_group_placement 13
+    place_on_specific_land_id CENTRAL_GOLD_A_ID
+    avoid_other_land_zones 0
+    find_closest
+    force_placement
+    terrain_to_place_on CENTRAL_DETAIL
+}
+
+create_object GOLD {
+    number_of_objects 3
+    number_of_groups 1
+    group_placement_radius 2
+    set_tight_grouping
+    set_gaia_object_only
+    place_on_specific_land_id CENTRAL_GOLD_B_ID
+    avoid_other_land_zones 0
+    find_closest
+    force_placement
+    terrain_to_place_on CENTRAL_DETAIL
+}
+
+create_object GOLD {
+    number_of_objects 3
+    number_of_groups 1
+    group_placement_radius 2
+    set_tight_grouping
+    set_gaia_object_only
+    place_on_specific_land_id CENTRAL_GOLD_C_ID
+    avoid_other_land_zones 0
+    find_closest
+    force_placement
+    terrain_to_place_on CENTRAL_DETAIL
+}
+
+create_object GOLD {
+    number_of_objects 3
+    number_of_groups 1
+    group_placement_radius 2
+    set_tight_grouping
+    set_gaia_object_only
+    place_on_specific_land_id CENTRAL_GOLD_D_ID
+    avoid_other_land_zones 0
+    find_closest
+    force_placement
+    terrain_to_place_on CENTRAL_DETAIL
 }
 
 create_object STONE {
     number_of_objects 4
-    number_of_groups 2
+    number_of_groups 1
     group_placement_radius 2
     set_tight_grouping
     set_gaia_object_only
-    place_on_specific_land_id CENTRAL_ISLAND_ID
-    avoid_other_land_zones 2
-    min_distance_group_placement 24
+    place_on_specific_land_id CENTRAL_STONE_A_ID
+    avoid_other_land_zones 0
+    find_closest
+    force_placement
+    terrain_to_place_on CENTRAL_DETAIL
 }
 
+create_object STONE {
+    number_of_objects 4
+    number_of_groups 1
+    group_placement_radius 2
+    set_tight_grouping
+    set_gaia_object_only
+    place_on_specific_land_id CENTRAL_STONE_B_ID
+    avoid_other_land_zones 0
+    find_closest
+    force_placement
+    terrain_to_place_on CENTRAL_DETAIL
+}
+
+/* The remaining island objectives use the original central land. */
 create_object RELIC {
     number_of_objects 5
     set_gaia_object_only

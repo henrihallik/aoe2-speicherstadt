@@ -3,11 +3,10 @@
 `Speicherstadt` is a 1v1 hybrid Random Map submission candidate for **The
 Garrison 2026 map competition**. It is designed by betwixtX with OpenAI Codex.
 
-**Current status:** v0.5.0 dock-and-fish correction pending an in-game retest.
-Version 0.4.0 fixed the barren outer districts with mirrored corner forests and
-distributed mainland wood. Version 0.5.0 changes every canal tile to standard
-dockable water terrain and reserves five separate fish parcels on each side,
-eliminating the fallible player-relative water search.
+**Current status:** v0.6.0 resource-and-fish candidate pending an in-game retest.
+Version 0.5.0 was confirmed in game to provide dockable canals and fixed fish
+shoals. Version 0.6.0 doubles those shoals and replaces fallible central mine
+searches with six compact, mirrored courtyard plots.
 
 ## Concept
 
@@ -36,15 +35,22 @@ player colors between sides. The geometry remains mirrored in every result.
   58-tree woodlines in different exposure profiles
 - Mainland wood: two fixed 90-tile corner forests per side plus a 7% forest
   pass split into 16 clumps across the player districts
-- Per player water: 4 shore fish and 6 deep fish across 5 fixed canal parcels
+- Per player water: 8 shore fish and 12 deep fish across 5 fixed canal parcels
 - Dock access: standard terrain ID 1 throughout both canals
-- Neutral island: four 3-tile golds, two 4-tile stones, 5 relics, and 48 trees
+- Neutral island: four fixed 3-tile golds, two fixed 4-tile stones, 5 relics,
+  and 48 trees
 - Flat elevation across all six crossings
 - No triggers, XS, custom includes, unit/building attribute changes, scripted
   income, capturable buildings, or indestructible objects
 
 Chinese and Mayan civilization start bonuses remain native to the game. The
 map does not rewrite civilization behavior.
+
+The land-resource baseline matches NAC5 Arabia and NAC5 Arena at 15 home gold
+tiles and 9 home stone tiles per player. Speicherstadt then adds 12 neutral
+gold and 8 neutral stone in the contested center, for 42 gold and 26 stone
+tiles across a two-player generation. The center therefore needed guaranteed
+placement rather than a larger nominal allocation.
 
 ## Install
 
